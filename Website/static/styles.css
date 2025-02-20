@@ -1,0 +1,31 @@
+header {
+    background-color: #1E3A8A;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo {
+    width: 65px;  
+    height: 65px;
+    border-radius: 20%;
+    object-fit: cover;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 5px 10px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+nav a:hover {
+    background-color: #334B8D;
+    color: #fff;
+}
