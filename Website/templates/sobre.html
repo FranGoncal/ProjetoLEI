@@ -3,12 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sobre</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='icon_web.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+    <title>Customer Churn Predictor</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; text-align: center; }
+        header { background-color: #1E3A8A; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+        nav ul { list-style: none; padding: 0; display: flex; gap: 15px; }
+        nav a { color: white; text-decoration: none; }
+        main { padding: 50px; }
+        button { background-color: #1E3A8A; color: white; padding: 10px 20px; border: none; cursor: pointer; margin-top: 20px; }
+        footer { background-color: #333; color: white; padding: 10px; position: relative; bottom: 0; width: 100%; }
+    </style>
 </head>
 <body>
-    <h1>Aqui estarão os detalhes sobre o website!</h1>
-    <form action="/" method="get">
-        <button>Pagina Inicial</button>
-    </form>
+    <header>
+        <div class="logo-title">
+            <img src="{{ url_for('static', filename='icon_web.png') }}" alt="Page Icon" class="logo">
+            <h1>Customer Churn Predictor</h1>
+            
+        </div>
+        <nav>
+            <ul>
+                <div class="nav-options">
+                    <li><a href="/">Home</a></li>
+                </div class="nav-options">
+                    <li><a href="prever">Models</a></li>
+                </div>
+                <div class="nav-options">
+                    <li><a href="contacto">Contacto</a></li>
+                </div>
+                <div class="nav-options">
+                    <li><a href="#">Sobre</a></li>
+                </div>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <h1>Sobre</h1>
+        <p>Dados sobre o projeto</p>
+        <a href="/"><button>Pagina Inicial</button></a>
+    </main>
+    
+    <footer>
+        <p>&copy; 2025 Customer Churn Predictor. Projeto acadêmico para previsão de customer churn no setor das telecomunicações.</p>
+    </footer>
 </body>
 </html>
