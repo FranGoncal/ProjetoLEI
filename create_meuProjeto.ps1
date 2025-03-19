@@ -37,34 +37,10 @@ az network nsg rule create --resource-group $resourceGroup --nsg-name $securityG
 # Criar interface de rede
 az network nic create --resource-group $resourceGroup --name $nicName --vnet-name $vnetName --subnet $subnetName --network-security-group $securityGroupName --public-ip-address $publicIpName
 
-# Criar ficheiro cloud-init
-$cloudInitContent = @"
-#cloud-config
-package_upgrade: true
-packages:
-  - apache2
-  - git
-  - docker.io
-  - git-lfs
 
-runcmd:
-  - sudo systemctl start docker
-  - sudo systemctl enable docker
-  - sudo usermod -aG docker adminuser
-  - newgrp docker
-
-  - git clone https://github.com/FranGoncal/ProjetoLEI/ /home/azureuser/teu-repo
-
-  - cd /home/azureuser/teu-repo/Website && git lfs install && git lfs pull
-
-  - cd /home/azureuser/teu-repo/Website && docker build -t meu-site .
-  - cd /home/azureuser/teu-repo/Website && sudo docker run -d -p 5000:5000 meu-site
-"@
 Write-Output "Git in"
-#Set-Content -Path $cloudInitFile -Value $cloudInitContent -Encoding UTF8
-
+$cloudInitContent = Get-Content -Path $cloudInitFile -Raw
 [System.Text.Encoding]::UTF8.GetBytes($cloudInitContent) | Set-Content -Path $cloudInitFile -Encoding Byte
-
 Write-Output "Git out"
 
 # Criar VM
