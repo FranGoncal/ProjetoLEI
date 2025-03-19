@@ -2,7 +2,7 @@
 Write-Output "Processo iniciado."
 
 # Definições
-$resourceGroup = "RG-Apache22"
+$resourceGroup = "RG-Projeto"
 $vmName = "Ubuntu24VM"
 $location = "uksouth"
 $adminUsername = "adminuser"
@@ -45,13 +45,18 @@ packages:
   - apache2
   - git
   - docker.io
+  - git-lfs
 
 runcmd:
   - sudo systemctl start docker
   - sudo systemctl enable docker
   - sudo usermod -aG docker adminuser
   - newgrp docker
+
   - git clone https://github.com/FranGoncal/ProjetoLEI/ /home/azureuser/teu-repo
+
+  - cd /home/azureuser/teu-repo/Website && git lfs install && git lfs pull
+
   - cd /home/azureuser/teu-repo/Website && docker build -t meu-site .
   - cd /home/azureuser/teu-repo/Website && sudo docker run -d -p 5000:5000 meu-site
 "@
