@@ -12,9 +12,15 @@ runcmd:
   - sudo usermod -aG docker adminuser
   - newgrp docker
 
-  - git clone https://github.com/FranGoncal/ProjetoLEI/ /home/azureuser/teu-repo
+  - git clone https://github.com/FranGoncal/ProjetoLEI/ /home/azureuser/ProjetoLEI
 
-  - cd /home/azureuser/teu-repo/Website && git lfs install && git lfs pull
+  - apt-get install -y python3-pip unzip
+  - sudo pip3 install gdown
 
-  - cd /home/azureuser/teu-repo/Website && docker build -t meu-site .
-  - cd /home/azureuser/teu-repo/Website && sudo docker run -d -p 5000:5000 meu-site
+  - cd /home/azureuser/ProjetoLEI/Website && gdown "https://drive.google.com/uc?export=download&id=1Fx2nGbXlamnzuwETZfkyHSpuU3tNfzpX" -O models.zip
+
+  - cd /home/azureuser/ProjetoLEI/Website && unzip models.zip -d models
+  - cd /home/azureuser/ProjetoLEI/Website && rm models.zip
+
+  - cd /home/azureuser/ProjetoLEI/Website && docker build -t meu-site .
+  - cd /home/azureuser/ProjetoLEI/Website && sudo docker run -d -p 5000:5000 meu-site
