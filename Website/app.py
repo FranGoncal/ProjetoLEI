@@ -1,13 +1,15 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_file
 import pandas as pd
 import pickle
 import numpy as np
 import joblib
+from io import BytesIO
 
 with open('models/model.pkl', 'rb') as file:
     loaded_model = pickle.load(file)
 
 scaler = joblib.load('scalers/scaler.pkl')
+#tipo_do_modelo = type(loaded_model).__name__
 
 #X = [1.23672422, -0.28621769, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0 ,1 ,1 ,0]
 #X = [-1.23672422, 0.19736523, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0 ,0 ,0 ,1]
@@ -35,22 +37,18 @@ def previsao():
         "tenure": [request.form["tenure"]],
         "MonthlyCharges": [request.form["monthlyCharges"]],
 
-
         "Contract_Month-to-month": [1 if request.form["contract"].lower() == "monthly" else 0],
         "Contract_One year": [1 if request.form["contract"].lower() == "one_year" else 0],
         "Contract_Two year": [1 if request.form["contract"].lower() == "two_year" else 0],
-
 
         "InternetService_DSL": [1 if request.form["internetService"].lower() == "dsl" else 0],
         "InternetService_Fiber optic": [1 if request.form["internetService"].lower() == "fiber_optic" else 0],
         "InternetService_No": [1 if request.form["internetService"].lower() == "none" else 0],
 
-
         "PaymentMethod_Bank transfer (automatic)": [1 if request.form["paymentMethod"].lower() == "credit_card" else 0],
         "PaymentMethod_Credit card (automatic)": [1 if request.form["paymentMethod"].lower() == "bank_transfer" else 0],
         "PaymentMethod_Electronic check": [1 if request.form["paymentMethod"].lower() == "electronic_check" else 0],
         "PaymentMethod_Mailed check": [1 if request.form["paymentMethod"].lower() == "mailed_check" else 0],
-
 
         "TechSupport_Yes": [1 if request.form["techSupport"].lower() == "yes" else 0],
         "Dependents_Yes": [1 if request.form["dependents"].lower() == "yes" else 0],
@@ -74,6 +72,12 @@ def previsao():
     res = "Churn" if res == 1 else "Retenção"
 
     return render_template("previsao_resultado.html", res=res, probabilidade=probabilidade)
+
+@app.route('/lime_explanation', methods=['POST'])
+def lime_explanation():
+    image_path = 'static\icon_web_1.png'
+    
+    return send_file(image_path, mimetype='image/png')
 
 
 @app.route("/contacto")
