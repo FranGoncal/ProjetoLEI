@@ -11,8 +11,8 @@ import matplotlib.pyplot as plt
 with open('models/model.pkl', 'rb') as file:
     loaded_model = pickle.load(file)
 
-with open('explainers/lime_explain_instance.pkl', 'rb') as f:
-    exp = dill.load(f)
+with open('explainers/lime_explainer.pkl', 'rb') as f:
+    explainer = dill.load(f)
 
 scaler = joblib.load('scalers/scaler.pkl')
 #tipo_do_modelo = type(loaded_model).__name__
@@ -81,8 +81,13 @@ def previsao():
 
 
     # Generate LIME explanation
+    exp = explainer.explain_instance(
+        data_row=X.iloc[0].values,
+        predict_fn=lambda x: loaded_model.predict_proba(pd.DataFrame(x, columns=X.columns))
+    )
 
     fig = exp.as_pyplot_figure()
+
     prediction = loaded_model.predict(X)[0]
     plt.title(f"Explicação LIME para a predição: {'Churn' if prediction == 1 else 'No Churn'}")
     img_buffer = io.BytesIO()
