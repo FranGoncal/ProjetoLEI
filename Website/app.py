@@ -4,9 +4,15 @@ import pickle
 import numpy as np
 import joblib
 from io import BytesIO
+import dill
+import io
+import matplotlib.pyplot as plt
 
 with open('models/model.pkl', 'rb') as file:
     loaded_model = pickle.load(file)
+
+with open('explainers/lime_explain_instance.pkl', 'rb') as f:
+    exp = dill.load(f)
 
 scaler = joblib.load('scalers/scaler.pkl')
 #tipo_do_modelo = type(loaded_model).__name__
@@ -14,6 +20,8 @@ scaler = joblib.load('scalers/scaler.pkl')
 #X = [1.23672422, -0.28621769, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0 ,1 ,1 ,0]
 #X = [-1.23672422, 0.19736523, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0 ,0 ,0 ,1]
 #X = np.array(X).reshape(1, -1)
+
+z = 0
 
 app = Flask(__name__) 
 
@@ -69,16 +77,47 @@ def previsao():
 
 
     #Mandar os resultados da previsao para o frotend
-    res = "Churn" if res == 1 else "Retenção"
+    res_label = "Churn" if res == 1 else "Retenção"
 
-    return render_template("previsao_resultado.html", res=res, probabilidade=probabilidade)
 
+    # Generate LIME explanation
+
+    fig = exp.as_pyplot_figure()
+    prediction = loaded_model.predict(X)[0]
+    plt.title(f"Explicação LIME para a predição: {'Churn' if prediction == 1 else 'No Churn'}")
+    img_buffer = io.BytesIO()
+    plt.savefig(img_buffer, format='png')
+    img_buffer.seek(0)
+
+
+    # Convert the image buffer to a base64 string to embed in HTML
+    import base64
+    img_str = base64.b64encode(img_buffer.getvalue()).decode('utf-8')
+
+    #global z
+    #z=X
+    return render_template("previsao_resultado.html", res=res_label, probabilidade=probabilidade, img_data=img_str)
+
+'''
 @app.route('/lime_explanation', methods=['POST'])
 def lime_explanation():
-    image_path = 'static\icon_web_1.png'
-    
-    return send_file(image_path, mimetype='image/png')
+    #image_path = 'static\icon_web_1.png'
+    #return send_file(image_path, mimetype='image/png')
+    print("Z =====> "+str(z))
 
+
+    fig = exp.as_pyplot_figure()
+    prediction = loaded_model.predict(z)[0]
+    plt.title(f"Explicação LIME para a predição: {'Churn' if prediction == 1 else 'No Churn'}")
+
+    # Salvar a figura em um buffer de bytes
+    img_buffer = io.BytesIO()
+    plt.savefig(img_buffer, format='png')
+    img_buffer.seek(0)
+
+    # Retornar a imagem
+    return send_file(img_buffer, mimetype='image/png')
+'''
 
 @app.route("/contacto")
 def contacto():
