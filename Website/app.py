@@ -2,9 +2,12 @@ from flask import Flask, render_template, request
 import pandas as pd
 import pickle
 import numpy as np
+import joblib
 
 with open('models/model.pkl', 'rb') as file:
     loaded_model = pickle.load(file)
+
+scaler = joblib.load('scalers/scaler.pkl')
 
 #X = [1.23672422, -0.28621769, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0 ,1 ,1 ,0]
 #X = [-1.23672422, 0.19736523, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0 ,0 ,0 ,1]
@@ -55,17 +58,14 @@ def previsao():
         "PaperlessBilling_Yes": [1 if request.form["paperlessBilling"].lower() == "yes" else 0]
     }
     X = pd.DataFrame(data)
-    print(X.head())
 
-    #Tratar os dados
-    #scaler da tenure e das monthlyCharges
-
-
-    print(X.head())
+    #Normalização dos atributos numéricos
+    columns_to_normalize = ['tenure', 'MonthlyCharges']
+    X[columns_to_normalize] = scaler.transform(X[columns_to_normalize])
 
     #Fazer previsao
-    res = loaded_model.predict(X)
-    print("A previsão foi :"+ str(res))
+    #res = loaded_model.predict(X)
+    #print("A previsão foi :"+ str(res))
 
 
     #Mandar os resultados da previsao para o frotend
