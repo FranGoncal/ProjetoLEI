@@ -5,16 +5,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='icon_web.png') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-
     <title>Customer Churn Predictor</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; text-align: center; }
-        header { background-color: #1E3A8A; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
-        nav ul { list-style: none; padding: 0; display: flex; gap: 15px; }
-        nav a { color: white; text-decoration: none; }
-        main { padding: 50px; }
-        button { background-color: #1E3A8A; color: white; padding: 10px 20px; border: none; cursor: pointer; margin-top: 20px; }
-        footer { background-color: #333; color: white; padding: 10px; position: relative; bottom: 0; width: 100%; }
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-color: #f4f4f9;
+            overflow-x: hidden;
+        }
+        header {
+            background-color: #1E3A8A;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            gap: 15px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        nav a:hover {
+            background-color: #334B8D;
+            color: #fff;
+        }
+        main {
+            padding: 50px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            width: 80%;
+            max-width: 600px;
+        }
+        button {
+            background-color: #1E3A8A;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #14275e;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 15px;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+        .logo-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo {
+            height: 40px;
+        }
     </style>
 </head>
 <body>
@@ -25,27 +88,20 @@
         </div>
         <nav>
             <ul>
-                <div class="nav-options">
-                    <li><a href="#">Home</a></li>
-                </div class="nav-options">
-                    <li><a href="prever">Models</a></li>
-                </div>
-                <div class="nav-options">
-                    <li><a href="contacto">Contacto</a></li>
-                </div>
-                <div class="nav-options">
-                    <li><a href="sobre">Sobre</a></li>
-                </div>
+                <li><a href="/">Home</a></li>
+                <li><a href="prever">Models</a></li>
+                <li><a href="contacto">Contacto</a></li>
+                <li><a href="sobre">Sobre</a></li>
             </ul>
         </nav>
     </header>
-    
+
     <main>
         <h2>Previsão do Customer Churn no Setor das Telecomunicações</h2>
         <p>Utilize modelos de Machine Learning para prever quais os clientes susceptíveis de abandonar um serviço de telecomunicações.</p>
         <a href="prever"><button>Explorar Modelos</button></a>
     </main>
-    
+
     <footer>
         <p>&copy; 2025 Customer Churn Predictor. Projeto acadêmico para previsão de customer churn no setor das telecomunicações.</p>
     </footer>

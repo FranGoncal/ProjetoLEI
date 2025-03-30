@@ -1,17 +1,27 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_file
 import pandas as pd
 import pickle
 import numpy as np
 import joblib
+from io import BytesIO
+import dill
+import io
+import matplotlib.pyplot as plt
 
 with open('models/model.pkl', 'rb') as file:
     loaded_model = pickle.load(file)
 
+with open('explainers/lime_explainer.pkl', 'rb') as f:
+    explainer = dill.load(f)
+
 scaler = joblib.load('scalers/scaler.pkl')
+#tipo_do_modelo = type(loaded_model).__name__
 
 #X = [1.23672422, -0.28621769, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0 ,1 ,1 ,0]
 #X = [-1.23672422, 0.19736523, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0 ,0 ,0 ,1]
 #X = np.array(X).reshape(1, -1)
+
+z = 0
 
 app = Flask(__name__) 
 
@@ -35,22 +45,18 @@ def previsao():
         "tenure": [request.form["tenure"]],
         "MonthlyCharges": [request.form["monthlyCharges"]],
 
-
         "Contract_Month-to-month": [1 if request.form["contract"].lower() == "monthly" else 0],
         "Contract_One year": [1 if request.form["contract"].lower() == "one_year" else 0],
         "Contract_Two year": [1 if request.form["contract"].lower() == "two_year" else 0],
-
 
         "InternetService_DSL": [1 if request.form["internetService"].lower() == "dsl" else 0],
         "InternetService_Fiber optic": [1 if request.form["internetService"].lower() == "fiber_optic" else 0],
         "InternetService_No": [1 if request.form["internetService"].lower() == "none" else 0],
 
-
         "PaymentMethod_Bank transfer (automatic)": [1 if request.form["paymentMethod"].lower() == "credit_card" else 0],
         "PaymentMethod_Credit card (automatic)": [1 if request.form["paymentMethod"].lower() == "bank_transfer" else 0],
         "PaymentMethod_Electronic check": [1 if request.form["paymentMethod"].lower() == "electronic_check" else 0],
         "PaymentMethod_Mailed check": [1 if request.form["paymentMethod"].lower() == "mailed_check" else 0],
-
 
         "TechSupport_Yes": [1 if request.form["techSupport"].lower() == "yes" else 0],
         "Dependents_Yes": [1 if request.form["dependents"].lower() == "yes" else 0],
@@ -71,10 +77,52 @@ def previsao():
 
 
     #Mandar os resultados da previsao para o frotend
-    res = "Churn" if res == 1 else "Retenção"
+    res_label = "Churn" if res == 1 else "Retenção"
 
-    return render_template("previsao_resultado.html", res=res, probabilidade=probabilidade)
 
+    # Generate LIME explanation
+    exp = explainer.explain_instance(
+        data_row=X.iloc[0].values,
+        predict_fn=lambda x: loaded_model.predict_proba(pd.DataFrame(x, columns=X.columns))
+    )
+
+    fig = exp.as_pyplot_figure()
+
+    prediction = loaded_model.predict(X)[0]
+    plt.title(f"Explicação LIME para a predição: {'Churn' if prediction == 1 else 'No Churn'}")
+    img_buffer = io.BytesIO()
+    plt.savefig(img_buffer, format='png')
+    img_buffer.seek(0)
+
+
+    # Convert the image buffer to a base64 string to embed in HTML
+    import base64
+    img_str = base64.b64encode(img_buffer.getvalue()).decode('utf-8')
+
+    #global z
+    #z=X
+    return render_template("previsao_resultado.html", res=res_label, probabilidade=probabilidade, img_data=img_str)
+
+'''
+@app.route('/lime_explanation', methods=['POST'])
+def lime_explanation():
+    #image_path = 'static\icon_web_1.png'
+    #return send_file(image_path, mimetype='image/png')
+    print("Z =====> "+str(z))
+
+
+    fig = exp.as_pyplot_figure()
+    prediction = loaded_model.predict(z)[0]
+    plt.title(f"Explicação LIME para a predição: {'Churn' if prediction == 1 else 'No Churn'}")
+
+    # Salvar a figura em um buffer de bytes
+    img_buffer = io.BytesIO()
+    plt.savefig(img_buffer, format='png')
+    img_buffer.seek(0)
+
+    # Retornar a imagem
+    return send_file(img_buffer, mimetype='image/png')
+'''
 
 @app.route("/contacto")
 def contacto():
