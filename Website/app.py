@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import pickle
 import numpy as np
 
@@ -21,6 +21,35 @@ def prever():
     #print("A previsão foi :"+ str(res))
     
     return render_template("previsao.html")
+
+
+@app.route("/previsao", methods=["POST"])
+def previsao():
+    
+    #Receber os dados do Forms
+    tenure = request.form["tenure"]
+    monthlyCharges = request.form["monthlyCharges"]
+    contract = request.form["contract"]
+    internetService = request.form["internetService"]
+    paymentMethod = request.form["paymentMethod"]
+    techSupport = request.form["techSupport"]
+    dependents = request.form["dependents"]
+    onlineSecurity = request.form["onlineSecurity"]
+    paperlessBilling = request.form["paperlessBilling"]
+
+    #Tratar os dados
+
+
+    #Fazer previsao
+    #res = loaded_model.predict(X)
+    #print("A previsão foi :"+ str(res))
+
+
+    #Mandar os resultados da previsao para o frotend
+
+
+    return render_template("previsao_resultado.html")
+
 
 @app.route("/contacto")
 def contacto():
