@@ -5,17 +5,103 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='icon_web.png') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-
     <title>Customer Churn Predictor</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; text-align: center; }
-        header { background-color: #1E3A8A; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
-        nav ul { list-style: none; padding: 0; display: flex; gap: 15px; }
-        nav a { color: white; text-decoration: none; }
-        main { padding: 50px; }
-        button { background-color: #1E3A8A; color: white; padding: 10px 20px; border: none; cursor: pointer; margin-top: 20px; }
-        footer { background-color: #333; color: white; padding: 10px; position: relative; bottom: 0; width: 100%; }
-
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-color: #f4f4f9;
+        }
+        header {
+            background-color: #1E3A8A;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            gap: 15px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        main {
+            padding: 50px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            width: 80%;
+            max-width: 600px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-align: left;
+            width: 100%;
+        }
+        input[type="radio"], input[type="number"], select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .radio-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .radio-group label {
+            margin-bottom: 0;
+        }
+        button {
+            background-color: #1E3A8A;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #14275e;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 15px;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+        .logo-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo {
+            height: 40px;
+        }
     </style>
 </head>
 <body>
@@ -23,13 +109,13 @@
         <div class="logo-title">
             <img src="{{ url_for('static', filename='icon_web.png') }}" alt="Page Icon" class="logo">
             <h1>Customer Churn Predictor</h1>
-            
         </div>
         <nav>
             <ul>
                 <div class="nav-options">
                     <li><a href="/">Home</a></li>
-                </div class="nav-options">
+                </div>
+                <div class="nav-options">
                     <li><a href="#">Models</a></li>
                 </div>
                 <div class="nav-options">
@@ -41,69 +127,93 @@
             </ul>
         </nav>
     </header>
-    
+
     <main>
         <h1>Previsão</h1>
         <form method="post" action="/previsao">
+            <div class="form-group">
+                <label>Tem dependentes?</label>
+                <div class="radio-group">
+                    <input type="radio" id="dependentsYes" name="dependents" value="yes" required>
+                    <label for="dependentsYes">Sim</label>
+                    <input type="radio" id="dependentsNo" name="dependents" value="no" required>
+                    <label for="dependentsNo">Não</label>
+                </div>
+            </div>
 
-            <label>Tem dependentes?</label>
-            <input type="radio" id="dependentsYes" name="dependents" value="yes" required>
-            <label for="dependentsYes">Sim</label>
-            <input type="radio" id="dependentsNo" name="dependents" value="no" required>
-            <label for="dependentsNo">Não</label><br>
-            
-            <label for="tenure">Tempo permanecente no serviço (meses):</label>
-            <input type="number" id="tenure" name="tenure" min="0" required><br>
+            <div class="form-group">
+                <label for="tenure">Tempo permanecente no serviço (meses):</label>
+                <input type="number" id="tenure" name="tenure" min="0" required>
+            </div>
 
-            <label for="internetService">Serviço de internet:</label>
-            <select id="internetService" name="internetService" required>
-                <option value="dsl">DSL</option>
-                <option value="fiber_optic">Fibra Óptica</option>
-                <option value="none">Nenhum</option>
-            </select><br>
+            <div class="form-group">
+                <label for="internetService">Serviço de internet:</label>
+                <select id="internetService" name="internetService" required>
+                    <option value="dsl">DSL</option>
+                    <option value="fiber_optic">Fibra Óptica</option>
+                    <option value="none">Nenhum</option>
+                </select>
+            </div>
 
-            <label>Possui um serviço de segurança online?</label>
-            <input type="radio" id="onlineSecurityYes" name="onlineSecurity" value="yes" required>
-            <label for="onlineSecurityYes">Sim</label>
-            <input type="radio" id="onlineSecurityNo" name="onlineSecurity" value="no" required>
-            <label for="onlineSecurityNo">Não</label><br>
+            <div class="form-group">
+                <label>Possui um serviço de segurança online?</label>
+                <div class="radio-group">
+                    <input type="radio" id="onlineSecurityYes" name="onlineSecurity" value="yes" required>
+                    <label for="onlineSecurityYes">Sim</label>
+                    <input type="radio" id="onlineSecurityNo" name="onlineSecurity" value="no" required>
+                    <label for="onlineSecurityNo">Não</label>
+                </div>
+            </div>
 
-            <label>Possui um serviço de suporte técnico?</label>
-            <input type="radio" id="techSupportYes" name="techSupport" value="yes" required>
-            <label for="techSupportYes">Sim</label>
-            <input type="radio" id="techSupportNo" name="techSupport" value="no" required>
-            <label for="techSupportNo">Não</label><br>
+            <div class="form-group">
+                <label>Possui um serviço de suporte técnico?</label>
+                <div class="radio-group">
+                    <input type="radio" id="techSupportYes" name="techSupport" value="yes" required>
+                    <label for="techSupportYes">Sim</label>
+                    <input type="radio" id="techSupportNo" name="techSupport" value="no" required>
+                    <label for="techSupportNo">Não</label>
+                </div>
+            </div>
 
-            <label for="contract">Tipo de contrato:</label>
-            <select id="contract" name="contract" required>
-                <option value="monthly">Mensal</option>
-                <option value="one_year">1 Ano</option>
-                <option value="two_year">2 Anos</option>
-            </select><br>
+            <div class="form-group">
+                <label for="contract">Tipo de contrato:</label>
+                <select id="contract" name="contract" required>
+                    <option value="monthly">Mensal</option>
+                    <option value="one_year">1 Ano</option>
+                    <option value="two_year">2 Anos</option>
+                </select>
+            </div>
 
-            <label>Faturação eletrônica?</label>
-            <input type="radio" id="paperlessBillingYes" name="paperlessBilling" value="yes" required>
-            <label for="paperlessBillingYes">Sim</label>
-            <input type="radio" id="paperlessBillingNo" name="paperlessBilling" value="no" required>
-            <label for="paperlessBillingNo">Não</label><br>
+            <div class="form-group">
+                <label>Faturação eletrônica?</label>
+                <div class="radio-group">
+                    <input type="radio" id="paperlessBillingYes" name="paperlessBilling" value="yes" required>
+                    <label for="paperlessBillingYes">Sim</label>
+                    <input type="radio" id="paperlessBillingNo" name="paperlessBilling" value="no" required>
+                    <label for="paperlessBillingNo">Não</label>
+                </div>
+            </div>
 
-            <label for="paymentMethod">Método de pagamento:</label>
-            <select id="paymentMethod" name="paymentMethod" required>
-                <option value="credit_card">Cartão de Crédito</option>
-                <option value="bank_transfer">Transferência Bancária</option>
-                <option value="electronic_check">Cheque Eletrônico</option>
-                <option value="mailed_check">Cheque Enviado</option>
-            </select><br>
+            <div class="form-group">
+                <label for="paymentMethod">Método de pagamento:</label>
+                <select id="paymentMethod" name="paymentMethod" required>
+                    <option value="credit_card">Cartão de Crédito</option>
+                    <option value="bank_transfer">Transferência Bancária</option>
+                    <option value="electronic_check">Cheque Eletrônico</option>
+                    <option value="mailed_check">Cheque Enviado</option>
+                </select>
+            </div>
 
-            <label for="monthlyCharges">Mensalidade:</label>
-            <input type="number" id="monthlyCharges" name="monthlyCharges" min="0" step="0.01" required><br>
+            <div class="form-group">
+                <label for="monthlyCharges">Mensalidade:</label>
+                <input type="number" id="monthlyCharges" name="monthlyCharges" min="0" step="0.01" required>
+            </div>
 
             <button type="submit">Fazer previsão</button>
-
         </form>
-        <a href="/"><button>Pagina Inicial</button></a>
+        
     </main>
-    
+
     <footer>
         <p>&copy; 2025 Customer Churn Predictor. Projeto acadêmico para previsão de customer churn no setor das telecomunicações.</p>
     </footer>
