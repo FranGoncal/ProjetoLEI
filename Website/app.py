@@ -30,25 +30,42 @@ def previsao():
     #Receber os dados do Forms
     data = {
         "tenure": [request.form["tenure"]],
-        "monthlyCharges": [request.form["monthlyCharges"]],
-        "contract": [request.form["contract"]],
-        "internetService": [request.form["internetService"]],
-        "paymentMethod": [request.form["paymentMethod"]],
-        "techSupport": [request.form["techSupport"]],
-        "dependents": [request.form["dependents"]],
-        "onlineSecurity": [request.form["onlineSecurity"]],
-        "paperlessBilling": [request.form["paperlessBilling"]]
+        "MonthlyCharges": [request.form["monthlyCharges"]],
+
+
+        "Contract_Month-to-month": [1 if request.form["contract"].lower() == "monthly" else 0],
+        "Contract_One year": [1 if request.form["contract"].lower() == "one_year" else 0],
+        "Contract_Two year": [1 if request.form["contract"].lower() == "two_year" else 0],
+
+
+        "InternetService_DSL": [1 if request.form["internetService"].lower() == "dsl" else 0],
+        "InternetService_Fiber optic": [1 if request.form["internetService"].lower() == "fiber_optic" else 0],
+        "InternetService_No": [1 if request.form["internetService"].lower() == "none" else 0],
+
+
+        "PaymentMethod_Bank transfer (automatic)": [1 if request.form["paymentMethod"].lower() == "credit_card" else 0],
+        "PaymentMethod_Credit card (automatic)": [1 if request.form["paymentMethod"].lower() == "bank_transfer" else 0],
+        "PaymentMethod_Electronic check": [1 if request.form["paymentMethod"].lower() == "electronic_check" else 0],
+        "PaymentMethod_Mailed check": [1 if request.form["paymentMethod"].lower() == "mailed_check" else 0],
+
+
+        "TechSupport_Yes": [1 if request.form["techSupport"].lower() == "yes" else 0],
+        "Dependents_Yes": [1 if request.form["dependents"].lower() == "yes" else 0],
+        "OnlineSecurity_Yes": [1 if request.form["onlineSecurity"].lower() == "yes" else 0],
+        "PaperlessBilling_Yes": [1 if request.form["paperlessBilling"].lower() == "yes" else 0]
     }
-    df = pd.DataFrame(data)
-    print(df.head())
+    X = pd.DataFrame(data)
+    print(X.head())
 
     #Tratar os dados
-        #scaler
-        #dummies
+    #scaler da tenure e das monthlyCharges
+
+
+    print(X.head())
 
     #Fazer previsao
-    #res = loaded_model.predict(X)
-    #print("A previsão foi :"+ str(res))
+    res = loaded_model.predict(X)
+    print("A previsão foi :"+ str(res))
 
 
     #Mandar os resultados da previsao para o frotend
