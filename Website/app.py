@@ -65,13 +65,15 @@ def previsao():
 
     #Fazer previsao
     res = loaded_model.predict(X)
-    print("A previsão foi :"+ str(res))
+    proba = loaded_model.predict_proba(X)
+    probabilidade = round(proba[0][res[0]] * 100, 2)  
+    print("A previsão foi :"+ str(res)+ " com probabilidade de -> "+str(proba))
 
 
     #Mandar os resultados da previsao para o frotend
     res = "Churn" if res == 1 else "Retenção"
 
-    return render_template("previsao_resultado.html", data=res)
+    return render_template("previsao_resultado.html", res=res, probabilidade=probabilidade)
 
 
 @app.route("/contacto")
