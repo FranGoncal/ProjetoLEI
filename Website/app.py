@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request
+import pandas as pd
 import pickle
 import numpy as np
 
@@ -27,18 +28,23 @@ def prever():
 def previsao():
     
     #Receber os dados do Forms
-    tenure = request.form["tenure"]
-    monthlyCharges = request.form["monthlyCharges"]
-    contract = request.form["contract"]
-    internetService = request.form["internetService"]
-    paymentMethod = request.form["paymentMethod"]
-    techSupport = request.form["techSupport"]
-    dependents = request.form["dependents"]
-    onlineSecurity = request.form["onlineSecurity"]
-    paperlessBilling = request.form["paperlessBilling"]
+    data = {
+        "tenure": [request.form["tenure"]],
+        "monthlyCharges": [request.form["monthlyCharges"]],
+        "contract": [request.form["contract"]],
+        "internetService": [request.form["internetService"]],
+        "paymentMethod": [request.form["paymentMethod"]],
+        "techSupport": [request.form["techSupport"]],
+        "dependents": [request.form["dependents"]],
+        "onlineSecurity": [request.form["onlineSecurity"]],
+        "paperlessBilling": [request.form["paperlessBilling"]]
+    }
+    df = pd.DataFrame(data)
+    print(df.head())
 
     #Tratar os dados
-
+        #scaler
+        #dummies
 
     #Fazer previsao
     #res = loaded_model.predict(X)
