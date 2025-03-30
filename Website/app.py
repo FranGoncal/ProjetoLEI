@@ -64,14 +64,14 @@ def previsao():
     X[columns_to_normalize] = scaler.transform(X[columns_to_normalize])
 
     #Fazer previsao
-    #res = loaded_model.predict(X)
-    #print("A previsão foi :"+ str(res))
+    res = loaded_model.predict(X)
+    print("A previsão foi :"+ str(res))
 
 
     #Mandar os resultados da previsao para o frotend
+    res = "Churn" if res == 1 else "Retenção"
 
-
-    return render_template("previsao_resultado.html")
+    return render_template("previsao_resultado.html", data=res)
 
 
 @app.route("/contacto")
