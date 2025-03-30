@@ -12,9 +12,9 @@ header {
 }
 
 .logo {
-    width: 65px;  
+    width: 180px;  
     height: 65px;
-    border-radius: 20%;
+    border-radius: 10%;
     object-fit: cover;
 }
 
