@@ -45,28 +45,31 @@ def previsao():
         "tenure": [request.form["tenure"]],
         "MonthlyCharges": [request.form["monthlyCharges"]],
 
+        "InternetService_DSL": [1 if request.form["internetService"].lower() == "dsl" else 0],
+        "InternetService_Fiber optic": [1 if request.form["internetService"].lower() == "fiber_optic" else 0],
+        "InternetService_No": [1 if request.form["internetService"].lower() == "none" else 0],
+
         "Contract_Month-to-month": [1 if request.form["contract"].lower() == "monthly" else 0],
         "Contract_One year": [1 if request.form["contract"].lower() == "one_year" else 0],
         "Contract_Two year": [1 if request.form["contract"].lower() == "two_year" else 0],
 
-        "InternetService_DSL": [1 if request.form["internetService"].lower() == "dsl" else 0],
-        "InternetService_Fiber optic": [1 if request.form["internetService"].lower() == "fiber_optic" else 0],
-        "InternetService_No": [1 if request.form["internetService"].lower() == "none" else 0],
+        
 
         "PaymentMethod_Bank transfer (automatic)": [1 if request.form["paymentMethod"].lower() == "credit_card" else 0],
         "PaymentMethod_Credit card (automatic)": [1 if request.form["paymentMethod"].lower() == "bank_transfer" else 0],
         "PaymentMethod_Electronic check": [1 if request.form["paymentMethod"].lower() == "electronic_check" else 0],
         "PaymentMethod_Mailed check": [1 if request.form["paymentMethod"].lower() == "mailed_check" else 0],
-
-        "TechSupport_Yes": [1 if request.form["techSupport"].lower() == "yes" else 0],
         "Dependents_Yes": [1 if request.form["dependents"].lower() == "yes" else 0],
         "OnlineSecurity_Yes": [1 if request.form["onlineSecurity"].lower() == "yes" else 0],
+
+        "TechSupport_Yes": [1 if request.form["techSupport"].lower() == "yes" else 0],
         "PaperlessBilling_Yes": [1 if request.form["paperlessBilling"].lower() == "yes" else 0]
     }
     X = pd.DataFrame(data)
 
     #Normalização dos atributos numéricos
     columns_to_normalize = ['tenure', 'MonthlyCharges']
+    #columns_to_normalize = ['MonthlyCharges']
     X[columns_to_normalize] = scaler.transform(X[columns_to_normalize])
 
     #Fazer previsao
@@ -89,7 +92,8 @@ def previsao():
     fig = exp.as_pyplot_figure()
 
     prediction = loaded_model.predict(X)[0]
-    plt.title(f"Explicação LIME para a predição: {'Churn' if prediction == 1 else 'No Churn'}")
+    plt.suptitle(f"Explicação LIME para a predição: {'Churn' if prediction == 1 else 'No Churn'}")
+    fig.tight_layout()
     img_buffer = io.BytesIO()
     plt.savefig(img_buffer, format='png')
     img_buffer.seek(0)
@@ -132,6 +136,13 @@ def contacto():
 def sobre():
     return render_template("sobre.html")
 
+
+from flask import send_from_directory
+@app.route('/service-worker.js')
+def service_worker():
+    return send_from_directory('.', 'service-worker.js')
+
+
 if __name__ == "__main__":
-    app.run(debug=True)
-    #app.run(host="0.0.0.0", port=5000)
+    #app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000)

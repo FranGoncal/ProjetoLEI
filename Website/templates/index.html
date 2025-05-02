@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
+    <link rel="manifest" href="/static/manifest.json">
+
+    <meta name="theme-color" content="#009578">
+    <!--<link rel="stylesheet" href="/static/192.png">--->
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='icon_web.png') }}">
@@ -95,6 +100,7 @@
             </ul>
         </nav>
     </header>
+    
 
     <main>
         <h2>Previsão do Customer Churn no Setor das Telecomunicações</h2>
@@ -105,5 +111,20 @@
     <footer>
         <p>&copy; 2025 Customer Churn Predictor. Projeto acadêmico para previsão de customer churn no setor das telecomunicações.</p>
     </footer>
+
+
+    <script>
+        if ('serviceWorker' in navigator) {
+          window.addEventListener('load', function() {
+            navigator.serviceWorker.register('/service-worker.js')
+              .then(function(registration) {
+                console.log('Service Worker registered with scope:', registration.scope);
+              }, function(err) {
+                console.log('Service Worker registration failed:', err);
+              });
+          });
+        }
+      </script>
+
 </body>
 </html>
