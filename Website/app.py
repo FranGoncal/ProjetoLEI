@@ -142,6 +142,9 @@ from flask import send_from_directory
 def service_worker():
     return send_from_directory('.', 'service-worker.js')
 
+@app.route('/manifest.json')
+def manifest():
+    return send_from_directory('static', 'manifest.json')
 
 if __name__ == "__main__":
     #app.run(debug=True)

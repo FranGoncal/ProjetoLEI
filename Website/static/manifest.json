@@ -16,6 +16,30 @@
         "sizes": "512x512",
         "type": "image/png"
       }
-    ]
-  }
-  
+    ],
+    "screenshots": [
+    {
+      "src": "screenshot-1.png",
+      "sizes": "360x640",
+      "type": "image/png"
+    },
+    {
+      "src": "screenshot-2.png",
+      "sizes": "360x640",
+      "type": "image/png"
+    },
+    {
+      "src": "screenshot-3.png",
+      "sizes": "1280x800",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "screenshot-4.png",
+      "sizes": "1280x800",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ]
+}
+   

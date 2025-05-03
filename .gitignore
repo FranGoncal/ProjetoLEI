@@ -2,10 +2,5 @@
 
 /.ipynb_checkpoints/
 
-/Website/models/
-
-/Website/scalers/
-
-/Website/explainers/
 
 dockerfileComands.txt
