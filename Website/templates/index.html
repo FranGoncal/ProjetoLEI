@@ -105,12 +105,25 @@
     <main>
         <h2>Previsão do Customer Churn no Setor das Telecomunicações</h2>
         <p>Utilize modelos de Machine Learning para prever quais os clientes susceptíveis de abandonar um serviço de telecomunicações.</p>
-        <a href="prever"><button>Explorar Modelos</button></a>
+        
+        <div style="display: flex; gap: 10px; align-items: center; justify-content: center;">
+            <a href="prever"><button>Explorar Modelos</button></a>
+            <button class="add-button" style="background-color: rgb(32, 120, 150);">Instalar Aplicação</button>
+            <script src="{{ url_for('static', filename='app.js') }}"></script>
+        </div>
+        
+        
+    
     </main>
+
+    
+
 
     <footer>
         <p>&copy; 2025 Customer Churn Predictor. Projeto acadêmico para previsão de customer churn no setor das telecomunicações.</p>
     </footer>
+
+    
 
 
     <script>
