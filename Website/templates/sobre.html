@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='icon_web.png') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='so_icon_web.png') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <title>Customer Churn Predictor</title>
     <style>
@@ -14,20 +14,6 @@
             text-align: center;
             background-color: #f4f4f9;
             overflow-x: hidden;
-        }
-        header {
-            background-color: #1E3A8A;
-            color: white;
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        nav ul {
-            list-style: none;
-            padding: 0;
-            display: flex;
-            gap: 15px;
         }
         nav a {
             color: white;
@@ -70,28 +56,20 @@
             bottom: 0;
             width: 100%;
         }
-        .logo-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .logo {
-            height: 40px;
-        }
+       
     </style>
 </head>
 <body>
     <header>
         <div class="logo-title">
-            <img src="{{ url_for('static', filename='icon_web.png') }}" alt="Page Icon" class="logo">
-            <h1>Customer Churn Predictor</h1>
+            <a href="/"><img src="{{ url_for('static', filename='icon_web_white.png') }}" alt="Page Icon" class="logo"></a>
         </div>
         <nav>
             <ul>
                 <li><a href="/">Home</a></li>
                 <li><a href="prever">Models</a></li>
                 <li><a href="contacto">Contacto</a></li>
-                <li><a href="sobre">Sobre</a></li>
+                <li><a href="#" class="active">Sobre</a></li>
             </ul>
         </nav>
     </header>

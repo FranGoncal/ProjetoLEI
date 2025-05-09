@@ -8,8 +8,26 @@ import dill
 import io
 import matplotlib.pyplot as plt
 
+
+loaded_models = {}
+
 with open('models/model.pkl', 'rb') as file:
-    loaded_model = pickle.load(file)
+    loaded_models['xgboost'] = pickle.load(file)
+
+with open('models/DT_model.pkl', 'rb') as file:
+    loaded_models['dt'] = pickle.load(file)
+
+with open('models/LR_model.pkl', 'rb') as file:
+    loaded_models['lr'] = pickle.load(file)
+
+with open('models/NB_model.pkl', 'rb') as file:
+    loaded_models['nb'] = pickle.load(file)
+
+with open('models/RF_model.pkl', 'rb') as file:
+    loaded_models['rf'] = pickle.load(file)
+
+with open('models/SVM_model.pkl', 'rb') as file:
+    loaded_models['svm'] = pickle.load(file)
 
 with open('explainers/lime_explainer.pkl', 'rb') as f:
     explainer = dill.load(f)
@@ -71,6 +89,26 @@ def previsao():
     columns_to_normalize = ['tenure', 'MonthlyCharges']
     #columns_to_normalize = ['MonthlyCharges']
     X[columns_to_normalize] = scaler.transform(X[columns_to_normalize])
+
+    modelo_escolhido = request.form["modeloEscolhido"].lower()
+
+    match modelo_escolhido:
+        case "xgboost":
+            print("Usando XGBoost")
+        case "rf":
+            print("Usando Random Forest")
+        case "nb":
+            print("Usando Naïve Bayes")
+        case "dt":
+            print("Usando Decision Tree")
+        case "lr":
+            print("Usando Logistic Regression")
+        case "svm":
+            print("Usando Suport Vector Machine")
+        case _:
+            print("Modelo desconhecido")
+
+    loaded_model=loaded_models[modelo_escolhido]
 
     #Fazer previsao
     res = loaded_model.predict(X)

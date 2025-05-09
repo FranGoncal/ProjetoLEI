@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='icon_web.png') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='so_icon_web.png') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <title>Customer Churn Predictor</title>
     <style>
@@ -14,20 +14,6 @@
             text-align: center;
             background-color: #f4f4f9;
             overflow-x: hidden;
-        }
-        header {
-            background-color: #1E3A8A;
-            color: white;
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        nav ul {
-            list-style: none;
-            padding: 0;
-            display: flex;
-            gap: 15px;
         }
         nav a {
             color: white;
@@ -95,21 +81,13 @@
             bottom: 0;
             width: 100%;
         }
-        .logo-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .logo {
-            height: 40px;
-        }
+        
     </style>
 </head>
 <body>
     <header>
         <div class="logo-title">
-            <img src="{{ url_for('static', filename='icon_web.png') }}" alt="Page Icon" class="logo">
-            <h1>Customer Churn Predictor</h1>
+            <a href="/"><img src="{{ url_for('static', filename='icon_web_white.png') }}" alt="Page Icon" class="logo"></a>
         </div>
         <nav>
             <ul>
@@ -117,7 +95,7 @@
                     <li><a href="/">Home</a></li>
                 </div>
                 <div class="nav-options">
-                    <li><a href="#">Models</a></li>
+                    <li><a href="#" class="active">Models</a></li>
                 </div>
                 <div class="nav-options">
                     <li><a href="contacto">Contacto</a></li>
@@ -208,6 +186,21 @@
             <div class="form-group">
                 <label for="monthlyCharges">Mensalidade:</label>
                 <input type="number" id="monthlyCharges" name="monthlyCharges" min="0" step="0.01" required>
+            </div>
+
+
+            <div class="form-group">
+                <label for="modeloEscolhido">Modelo de previsão:</label>
+                <select id="modeloEscolhido" name="modeloEscolhido" required>
+
+                    <option value="XGBoost" selected>XGBoost</option>
+                    <option value="rf">Random Forest</option>
+                    <option value="NB">Naïve Bayes</option>
+                    <option value="DT">Decision Tree</option>
+                    <option value="LR">Logistic Regression</option>
+                    <option value="SVM">Suport Vector Machine</option>
+
+                </select>
             </div>
 
             <button type="submit">Fazer previsão</button>
