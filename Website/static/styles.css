@@ -26,16 +26,14 @@ html, body {
     flex-direction: column;
 }
 
-main {
-    flex: 1; /* Ocupa o espaço restante entre header e footer */
-}
-
-  
 
 
-
-
-
+.texto {
+    width: 100%; /* ou um valor fixo como 300px */
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+  }
 
 .logo-title {
     display: flex;
@@ -112,3 +110,28 @@ header {
     height: 10vh;
     padding: 0; /* remove padding que distorce altura */
 }
+
+
+
+
+main {
+    flex: 1; /* Ocupa o espaço restante entre header e footer */
+    background-color: white;
+}
+
+@media (prefers-color-scheme: dark) {
+    main {
+      background-color: #2b2b28;
+      color: rgb(152, 152, 152);
+    }
+    input, select {
+        background-color: #4d4d4d;
+        color: #cbc7c7;
+        border: 1px solid #444;
+    }
+
+
+
+
+
+  }
