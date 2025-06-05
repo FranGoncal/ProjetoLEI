@@ -61,6 +61,24 @@
             width: 100%;
         }
         
+
+        a.link-kaggle:link {
+            color: #415a77;
+        }
+
+        a.link-kaggle:visited {
+            color: #834df6;
+        }
+
+        a.link-kaggle:hover {
+            color: #284882;
+        }
+
+        a.link-kaggle:active {
+            color: #034081;
+        }
+
+
     </style>
 </head>
 <body>
@@ -99,6 +117,7 @@
             <p>O Customer Churn é o termo usado para descrever a perda de clientes durante um determinado período de tempo. Por outras palavras, representa a quantidade de clientes que abandonaram os servicos de uma empresa (churn) durante um determinada periodo de tempo. </p>
             <p>Durante todas as fases de comércio, as empresas têm uma alta dependência da permanência dos seus clientes no negócio. O investimento recorrente dos clientes em serviços ou produtos de um negócio, contribui para o desenvolvimento e sucesso do mesmo. Esta interpretação aplica-se também no setor das telecomunicações, onde é crucial para as operadoras, manter uma boa reputação e satisfazer os clientes de modo a retê-los nos serviços da empresa. Estima-se que o custo associado ao ganho de novos clientes seja 10 vezes superior ao custo da retenção dos existentes. Num ambiente de elevada concorrência, os esforços para a retenção de clientes tornam-se ainda mais relevantes de modo a garantir e maximizar lucros.</p>
             <p>Para a resolução deste problema, nos dias de hoje, as empresas de telecomunicações investem em modelos de previsão de customer churn eficientes e precisos. Um bom modelo de previsão de abandono de serviços é valioso, uma vez que possibilita uma prevenção contra o abandono do mesmo, esta prevenção no caso das empresas de telecomunicação, pode ser feita simplesmente através de uma proposta que aumente a satisfação do cliente com o serviço contratado. Desta maneira os modelos de previsão de abandono de serviços conseguem ter um impacto direto na maneira como uma empresa lida com os clientes que abandonam um serviço.</p>
+            <p>Este website visa disponibilisar vários modelos preditivos de customer churn, para previsão individual ou em grupo, contribuindo no setor da telecomunicação para o estudo do customer churn.</p>
         </div>
         
         <hr>
@@ -107,8 +126,29 @@
             <h3>
                 2 - Dataset
             </h3>
-            <p>A qualidade dos dados utilizados durante o treino de qualquer modelo preditivo, é um aspecto fundamental para a obtenção de resultados relevantes. sobre a qual é possível fazer análises de dados, treinar modelos e retirar conclusões sobre determinados problemas. A escolha e o estudo de datasets adequados são cruciais para garantir a validade e relevância dos resultados.</p>
-            <p>Durante a pesquisa efetuada na plataforma Kaggle, foram encontrados vários datasets. De modo a selecionar um dataset adequado, optou-se por escolher um dos datasets com maior relevância, bem como um número significativo de colunas e linhas, independentemente da data de publicação. </p>
+            <p>A qualidade dos dados utilizados durante o treino de qualquer modelo preditivo, é um aspecto fundamental para a obtenção de resultados relevantes.</p>
+            <p>Os modelos presentes neste website, foram treinados com um dataset obtido através da plataforma <a class="link-kaggle" href="https://www.kaggle.com/datasets/blastchar/telco-customer-churn">kaggle</a>, sendo originalmente publicado pela IBM, contendo um número significativo de 7043 registos e 21 atributos. Deste dataset foram apenas selecionados 10 atributos, sendo estes descritos pela seguinte tabela: </p>
+            <table border="1" cellpadding="8" cellspacing="0">
+                <thead>
+                  <tr>
+                    <th>Atributo</th>
+                    <th>Descrição</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>Dependents</td><td>Atributo categórico que descreve se o cliente tem dependentes (Yes, No)</td></tr>
+                  <tr><td>Tenure</td><td>Atributo numérico dos meses que o cliente permaneceu na empresa.</td></tr>
+                  <tr><td>InternetService</td><td>Atributo categórico que descreve o contrato de internet do cliente. (DSL, Fiber optic, No)</td></tr>
+                  <tr><td>OnlineSecurity</td><td>Atributo categórico que descreve se cliente está subscrito a um serviço adicional de segurança online. (Yes, No, No internet service)</td></tr>
+                  <tr><td>TechSupport</td><td>Atributo categórico que descreve se o cliente está subscrito a um serviço de suporte adicional da empresa. (Yes, No, No internet service)</td></tr>
+                  <tr><td>Contract</td><td>Atributo categórico dos termos do contrato. (Month-to-month, One year, Two year)</td></tr>
+                  <tr><td>PaperlessBilling</td><td>Atributo categórico que descreve se a cobrança ao cliente é sem papeis. (Yes, No)</td></tr>
+                  <tr><td>PaymentMethod</td><td>Atributo categórico que descreve o método de pagamento do serviço. (Electronic check, Mailed check, Bank transfer (automatic), Credit card)</td></tr>
+                  <tr><td>MonthlyCharges</td><td>Atributo numérico do valor pago pelos clientes mensalmente.</td></tr>
+                  <tr><td>Churn</td><td>Atributo alvo.</td></tr>
+                </tbody>
+              </table>
+              
         </div>
 
         <hr>
@@ -117,9 +157,17 @@
             <h3>
                 3 - Modelos de Previsão
             </h3>
-            <p>TextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextTextText</p>
+            <p>Com base numa análise de vários artigos cientificos que contribuiram para a previsão do customer churn no setor da telecomunicação, foram treinados 6 modelos preditivos diferentes, sendo estes: </p>
+            <ul style="text-indent: 0em;">
+                <li>XGBoost</li>
+                <li>Random Forest</li>
+                <li>Naive Bayes</li>
+                <li>Decision Tree</li>
+                <li>Logistic Regression</li>
+                <li>Suport Vector Machine</li>
+            </ul>
         </div>
-
+            
         
     
     </main>
