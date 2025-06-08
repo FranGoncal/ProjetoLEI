@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request, send_file, redirect, url_for, flash
 import pandas as pd
 import pickle
 import numpy as np
@@ -7,7 +7,9 @@ from io import BytesIO
 import dill
 import io
 import matplotlib.pyplot as plt
-
+import requests
+import os
+from dotenv import load_dotenv
 
 loaded_models = {}
 
@@ -42,6 +44,7 @@ scaler = joblib.load('scalers/scaler.pkl')
 z = 0
 
 app = Flask(__name__) 
+app.secret_key = '81250a061509d4e248fa2d5aac92571dde850bdb4cb446f972908c45930e7da00bd72d684c5763729d03b7264c4d1626'
 
 @app.route("/")
 def home():
@@ -60,6 +63,20 @@ def preverCsv():
 
 @app.route("/previsao-csv", methods=["POST"])
 def previsaoCsv():
+    ### Captcha ###
+    captcha_response = request.form.get('g-recaptcha-response')
+    load_dotenv()
+    secret = os.environ.get('RECAPTCHA_SECRET')
+    verify_url = 'https://www.google.com/recaptcha/api/siteverify'
+    payload = {'secret': secret, 'response': captcha_response}
+    r = requests.post(verify_url, data=payload)
+    result = r.json()
+
+    if not result.get('success', False):
+        flash("Falha na verificação do CAPTCHA. Tente novamente.")
+        return redirect(url_for('preverCsv'))
+    
+    
     if "csvfile" not in request.files:
         return "Ficheiro CSV não enviado", 400
 
@@ -106,9 +123,9 @@ def previsaoCsv():
     )
 
 
-
 def preprocess_data(df):
     return df
+
 
 
 @app.route("/previsao", methods=["POST"])

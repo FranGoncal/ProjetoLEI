@@ -143,6 +143,15 @@
             box-sizing: border-box;
         }
 
+        .alert {
+            background-color: #ffe6e6;
+            color: #b30000;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 6px solid #ff0000;
+            border-radius: 5px;
+        }
+
 
     </style>
 </head>
@@ -157,7 +166,7 @@
                 <li class="dropdown">
                     <a href="prever" class="dropbtn active">Modelos</a>
                     <div class="dropdown-content">
-                        <a href="#">Previsão Individual</a>
+                        <a href="/prever">Previsão Individual</a>
                         <a href="/prever-csv">Previsão em Lote (.CSV)</a>
                     </div>
                 </li>
@@ -170,7 +179,7 @@
     <main>
         <h1>Previsão para Ficheiro CSV</h1>
         <form onsubmit="return validarCSVSelecionado()" method="post" action="/previsao-csv" enctype="multipart/form-data">
-
+              
             <p>Para este tipo de previsão é necessário respeitar um formato especifico de ficheiro csv. <a class="link-cor" href="{{ url_for('static', filename='template.csv') }}" download>Download Template</a></p>
             
             <div class="file-upload-wrapper">
@@ -208,8 +217,31 @@
                 }
             </script>
                 
-            
-            
+            <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+            <center><div class="g-recaptcha" data-sitekey="6LdXulkrAAAAAHhbwhUnSWF8K_lrtkk0Jr0M3phl"></div></center>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div id="flash-message" class="alert">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+                </div>
+
+                <script>
+                // Aguarda 5 segundos e remove a mensagem
+                setTimeout(function() {
+                    const flash = document.getElementById('flash-message');
+                    if (flash) {
+                    flash.style.transition = "opacity 0.5s ease-out";
+                    flash.style.opacity = "0";
+                    setTimeout(() => flash.remove(), 500); // remove após o fade
+                    }
+                }, 5000); // 5000 milissegundos = 5 segundos
+                </script>
+            {% endif %}
+            {% endwith %}
+
+
 
             <div class="form-group">
                 <label for="modeloEscolhido">Modelo de previsão:</label>
