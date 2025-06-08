@@ -1,11 +1,15 @@
-body {
-    margin: 0;
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
     height: 100vh;
+    z-index: -1;
+  
     background: linear-gradient(-45deg, #0d1b2a, #1b263b, #415a77, #778da9);
     background-size: 400% 400%;
-    animation: gradientMove 125s ease infinite;
-    font-family: sans-serif;
-}
+    animation: gradientMove 80s ease infinite;
+  }
   
 @keyframes gradientMove {
     0% {
@@ -26,7 +30,30 @@ html, body {
     flex-direction: column;
 }
 
+@keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+}
+  
+@keyframes blinkCaret {
+    0%, 100% { border-color: transparent; }
+    50% { border-color: white; }
+}
 
+.typing {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 3px solid white;
+    width: 0;
+    animation: typing 3s steps(30, end) forwards, blinkCaret 0.7s step-end 6;
+}
+
+/* Remove o cursor após a digitação */
+.typing.finished {
+    border-right: none;
+}
+  
 
 .texto {
     width: 100%; /* ou um valor fixo como 300px */
@@ -103,12 +130,17 @@ nav li {
 }
 
 header {
-    background-color: #1E3A8A;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(135deg, #1E3A8A 0%, #134be7 100%);
     display: flex;
     justify-content: space-between;
-    align-items: stretch; /* essencial! */
+    align-items: stretch;
     height: 10vh;
-    padding: 0; /* remove padding que distorce altura */
+    padding: 0;
+    z-index: 1000; 
 }
 
 
@@ -168,10 +200,25 @@ header {
 
 
 
+@keyframes fadeSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 main {
-    flex: 1; /* Ocupa o espaço restante entre header e footer */
+  animation: fadeSlideUp 1.2s ease-out;
+}
+
+main {
+    flex: 1;
     background-color: white;
+    margin-top: 60vh; 
 }
 
 @media (prefers-color-scheme: dark) {

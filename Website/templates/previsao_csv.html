@@ -29,6 +29,37 @@
             width: 80%;
             max-width: 600px;
         }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-align: left;
+            width: 100%;
+        }
+        input[type="radio"], input[type="number"], select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .radio-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .radio-group label {
+            margin-bottom: 0;
+        }
         button {
             background-color: #1E3A8A;
             color: white;
@@ -50,44 +81,21 @@
             bottom: 0;
             width: 100%;
         }
-        
-        .result {
-            font-size: 1.2em;
-            margin-top: 20px;
-        }
-        #lime-button {
-            display: none;
-        }
-        .image-frame {
-            display: block;
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: center;
-        }
-        .image-container img {
-            max-width: 100%;
-            height: auto;
-        }
-        
-
-        .image-frame {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 20px 0;
+        a.link-cor:link {
+            color: #415a77;
         }
 
-        .image-container {
-            max-width: 90%;
-            text-align: center;
+        a.link-cor:visited {
+            color: #834df6;
         }
 
-        #lime-image {
-            max-width: 100%;
-            height: auto;
+        a.link-cor:hover {
+            color: #284882;
         }
 
-
+        a.link-cor:active {
+            color: #034081;
+        }
     </style>
 </head>
 <body>
@@ -99,7 +107,7 @@
             <ul>
                 <li><a href="/">Home</a></li>
                 <li class="dropdown">
-                    <a href="prever" class="dropbtn active" >Modelos</a>
+                    <a href="prever" class="dropbtn active">Modelos</a>
                     <div class="dropdown-content">
                         <a href="#">Previsão Individual</a>
                         <a href="/prever-csv">Previsão em Lote (.CSV)</a>
@@ -112,28 +120,30 @@
     </header>
 
     <main>
-        <h1>Resultado da Previsão:</h1>
-        <p class="result typing" id="typing-text">Probabilidade de <b>{{ probabilidade }}</b>% de <b>{{ res }}</b></p>
-        <script>
-            const typingElement = document.getElementById('typing-text');
-            typingElement.addEventListener('animationend', () => {
-              typingElement.classList.add('finished');
-            });
-          </script>
+        <h1>Previsão paca Ficheiro CSV</h1>
+        <form method="post" action="/previsao-csv">
+            <p>Para este tipo de previsão é necessário respeitar um formato especifico de ficheiro csv. <a class="link-cor" href="{{ url_for('static', filename='template.csv') }}" download>Download Template</a></p>
+            
 
-        <h1>Explicação LIME Dinâmica</h1>
-        <button id="lime-button" onclick="fetchLimeExplanation()">Obter Explicação LIME</button>
+            <input type="file" name="csvfile" accept=".csv" required>
 
-        <div class="image-frame" id="image-frame">
-            <div class="image-container" id="image-container">
-                <img id="lime-image" src="data:image/png;base64,{{ img_data }}" alt="Gráfico de Explicação LIME">
+            <div class="form-group">
+                <label for="modeloEscolhido">Modelo de previsão:</label>
+                <select id="modeloEscolhido" name="modeloEscolhido" required>
+
+                    <option value="XGBoost" selected>XGBoost</option>
+                    <option value="rf">Random Forest</option>
+                    <option value="NB">Naïve Bayes</option>
+                    <option value="DT">Decision Tree</option>
+                    <option value="LR">Logistic Regression</option>
+                    <option value="SVM">Suport Vector Machine</option>
+
+                </select>
             </div>
-        </div>
 
-        <div>
-            <a href="/"><button>Página Inicial</button></a>
-            <a href="/prever"><button>Nova Previsão</button></a>
-        </div>
+            <button type="submit">Fazer previsão</button>
+        </form>
+        
     </main>
 
     <footer>

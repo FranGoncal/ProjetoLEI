@@ -54,6 +54,9 @@ def prever():
     
     return render_template("previsao.html")
 
+@app.route("/prever-csv")
+def preverCsv():
+    return render_template("previsao_csv.html")
 
 @app.route("/previsao", methods=["POST"])
 def previsao():
