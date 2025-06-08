@@ -44,7 +44,8 @@ scaler = joblib.load('scalers/scaler.pkl')
 z = 0
 
 app = Flask(__name__) 
-app.secret_key = '81250a061509d4e248fa2d5aac92571dde850bdb4cb446f972908c45930e7da00bd72d684c5763729d03b7264c4d1626'
+load_dotenv()
+app.secret_key = os.getenv("SECRET_KEY")
 
 @app.route("/")
 def home():
