@@ -96,6 +96,54 @@
         a.link-cor:active {
             color: #034081;
         }
+        .file-upload-wrapper {
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+
+        .file-upload-label {
+            background-color: #4d4d4d;
+            color: white;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: inline-block;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .file-upload-label:hover {
+            background-color: #414141;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .file-upload-label.selected {
+            background-color: #2e7d32;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        input[type="file"] {
+            display: none; /* ou visibility: hidden; */
+        }
+
+
+        #file-name-display {
+            margin-top: 8px;
+            font-style: italic;
+            color: #2e7d32;
+            font-weight: bold;
+        }
+
+        .file-upload-label {
+            width: 100%;
+            max-width: 300px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+
     </style>
 </head>
 <body>
@@ -120,12 +168,48 @@
     </header>
 
     <main>
-        <h1>Previsão paca Ficheiro CSV</h1>
-        <form method="post" action="/previsao-csv">
+        <h1>Previsão para Ficheiro CSV</h1>
+        <form onsubmit="return validarCSVSelecionado()" method="post" action="/previsao-csv">
+
             <p>Para este tipo de previsão é necessário respeitar um formato especifico de ficheiro csv. <a class="link-cor" href="{{ url_for('static', filename='template.csv') }}" download>Download Template</a></p>
             
+            <div class="file-upload-wrapper">
+                <label id="file-upload-label" class="file-upload-label">
+                    Selecionar ficheiro CSV &#128228;
+                    <input type="file" name="csvfile" accept=".csv" onchange="mostrarNomeFicheiro(this)">
+                </label>
+            </div>
+            <p id="file-name-display">Nenhum ficheiro selecionado.</p>
+            
 
-            <input type="file" name="csvfile" accept=".csv" required>
+            
+            <script>
+                function mostrarNomeFicheiro(input) {
+                    const display = document.getElementById('file-name-display');
+                    const label = document.getElementById('file-upload-label');
+
+                    if (input.files.length > 0) {
+                        const fileName = input.files[0].name;
+                        display.textContent = `Ficheiro selecionado: ${fileName}`;
+                        label.classList.add("selected");
+                    } else {
+                        display.textContent = "Nenhum ficheiro selecionado.";
+                        label.classList.remove("selected");
+                    }
+                }
+
+                function validarCSVSelecionado() {
+                    const input = document.querySelector('input[type="file"]');
+                    if (!input.files.length) {
+                        alert('Por favor selecione um ficheiro CSV.');
+                        return false;
+                    }
+                    return true;
+                }
+            </script>
+                
+            
+            
 
             <div class="form-group">
                 <label for="modeloEscolhido">Modelo de previsão:</label>
