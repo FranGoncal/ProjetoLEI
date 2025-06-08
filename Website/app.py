@@ -64,7 +64,7 @@ def previsaoCsv():
         return "Ficheiro CSV não enviado", 400
 
     ficheiro = request.files["csvfile"]
-    model = request.form["modeloEscolhido"].lower()
+    modelo_escolhido = request.form["modeloEscolhido"].lower()
 
     # Verifica se o nome do ficheiro está vazio (nenhum ficheiro selecionado)
     if ficheiro.filename == "":
@@ -80,8 +80,35 @@ def previsaoCsv():
         print("Erro ao ler CSV:", e)
         return "Erro ao processar o ficheiro CSV", 500
     
-    return render_template("previsao_csv_resultado.html")
+    
 
+    #verificar formato do ficheiro
+    
+
+    #fazer previsão
+    loaded_model=loaded_models[modelo_escolhido]
+    X = preprocess_data(df)
+
+    y_pred = loaded_model.predict(X)
+    df["churn"] = y_pred
+
+    # Cria buffer para guardar CSV em memória
+    output = io.BytesIO()
+    df.to_csv(output, index=False)
+    output.seek(0)
+
+    # Envia CSV como ficheiro para download
+    return send_file(
+        output,
+        mimetype='text/csv',
+        as_attachment=True,
+        download_name="resultado_previsao.csv"
+    )
+
+
+
+def preprocess_data(df):
+    return df
 
 
 @app.route("/previsao", methods=["POST"])
