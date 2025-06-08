@@ -58,6 +58,32 @@ def prever():
 def preverCsv():
     return render_template("previsao_csv.html")
 
+@app.route("/previsao-csv", methods=["POST"])
+def previsaoCsv():
+    if "csvfile" not in request.files:
+        return "Ficheiro CSV não enviado", 400
+
+    ficheiro = request.files["csvfile"]
+    model = request.form["modeloEscolhido"].lower()
+
+    # Verifica se o nome do ficheiro está vazio (nenhum ficheiro selecionado)
+    if ficheiro.filename == "":
+        return "Nenhum ficheiro selecionado", 400
+
+
+    # Lê o CSV usando pandas
+    try:
+        df = pd.read_csv(ficheiro)
+        print("CSV Recebido:")
+        print(df.head())  # Mostra as primeiras linhas do DataFrame no terminal
+    except Exception as e:
+        print("Erro ao ler CSV:", e)
+        return "Erro ao processar o ficheiro CSV", 500
+    
+    return render_template("previsao_csv_resultado.html")
+
+
+
 @app.route("/previsao", methods=["POST"])
 def previsao():
     

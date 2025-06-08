@@ -169,7 +169,7 @@
 
     <main>
         <h1>Previsão para Ficheiro CSV</h1>
-        <form onsubmit="return validarCSVSelecionado()" method="post" action="/previsao-csv">
+        <form onsubmit="return validarCSVSelecionado()" method="post" action="/previsao-csv" enctype="multipart/form-data">
 
             <p>Para este tipo de previsão é necessário respeitar um formato especifico de ficheiro csv. <a class="link-cor" href="{{ url_for('static', filename='template.csv') }}" download>Download Template</a></p>
             

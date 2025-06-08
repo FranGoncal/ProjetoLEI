@@ -1,0 +1,5 @@
+gender,SeniorCitizen,Partner,Dependents,tenure,PhoneService,MonthlyCharges,TotalCharges,InternetService,Contract,PaymentMethod
+Female,0,Yes,No,12,Yes,29.85,345.3,DSL,Month-to-month,Electronic check
+Male,1,No,No,1,No,56.95,56.95,Fiber optic,Two year,Credit card (automatic)
+Male,0,Yes,Yes,24,Yes,53.85,1290.4,DSL,One year,Bank transfer (automatic)
+Female,1,No,Yes,5,Yes,42.3,210.5,Fiber optic,Month-to-month,Electronic check
