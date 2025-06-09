@@ -136,22 +136,36 @@
             
             
         </div>
-        <div class="hamburger" onclick="toggleMenu()">
-            &#9776;
+        <!-- Botão Hamburger -->
+        <div class="hamburger" onclick="toggleMenu()">&#9776;</div>
+
+        <!-- Menu Mobile -->
+        <div class="nav-wrapper" id="navHumb">
+            <nav>
+                <ul>
+                    <li><a href="#" class="active">Home</a></li>
+                    <li><a href="/prever">Previsão Individual</a></li>
+                    <li><a href="/prever-csv">Previsão em Lote (.CSV)</a></li>
+                    <li><a href="/contacto">Contacto</a></li>
+                    <li><a href="/sobre">Sobre</a></li>
+                </ul>
+            </nav>
         </div>
+
+        <!-- Menu Desktop -->
         <div class="nav-wrapper" id="navMenu">
             <nav>
-                <ul style="height: 100%;">
+                <ul>
                     <li><a href="#" class="active">Home</a></li>
                     <li class="dropdown">
-                        <a href="prever" class="dropbtn">Modelos</a>
+                        <a href="/prever" class="dropbtn">Modelos</a>
                         <div class="dropdown-content">
                             <a href="/prever">Previsão Individual</a>
                             <a href="/prever-csv">Previsão em Lote (.CSV)</a>
                         </div>
                     </li>
-                    <li><a href="contacto">Contacto</a></li>
-                    <li><a href="sobre">Sobre</a></li>
+                    <li><a href="/contacto">Contacto</a></li>
+                    <li><a href="/sobre">Sobre</a></li>
                 </ul>
             </nav>
         </div>
@@ -230,14 +244,7 @@
             
         
     
-    </main>
-
-    <script>
-        function toggleMenu() {
-            const menu = document.getElementById('navMenu');
-            menu.classList.toggle('open');
-        }
-    </script>    
+    </main>   
 
 
     <footer>
@@ -245,7 +252,28 @@
     </footer>
 
     
-
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('navHumb');
+            menu.classList.toggle('open');
+        }
+    
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('#navHumb a').forEach(link => {
+                link.addEventListener('click', () => {
+                    document.getElementById('navHumb').classList.remove('open');
+                });
+            });
+    
+            document.addEventListener('click', function (event) {
+                const menu = document.getElementById('navHumb');
+                const hamburger = document.querySelector('.hamburger');
+                if (!menu.contains(event.target) && !hamburger.contains(event.target)) {
+                    menu.classList.remove('open');
+                }
+            });
+        });
+    </script>
 
     <script>
         if ('serviceWorker' in navigator) {

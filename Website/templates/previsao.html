@@ -81,31 +81,89 @@
             bottom: 0;
             width: 100%;
         }
+        /* For mobile specifically */
+        @media (max-width: 768px) {
+            main {
+                width: 100%;
+                max-width: 100%;
+                margin: 12vh 0 0 0;
+                padding: 20px;
+                box-sizing: border-box;
+            }
+            
+            body {
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+                overflow-x: hidden;
+                width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            footer {
+                padding: 15px 0;
+                width: 100vw;
+                position: relative;
+                left: 0;
+            }
+            
+            html, body {
+                width: 100%;
+                overflow-x: hidden;
+            }
+        }
         
     </style>
 </head>
 <body>
     <header>
         <div class="logo-title">
-            <a href="/"><img src="{{ url_for('static', filename='icon_web_white.png') }}" alt="Page Icon" class="logo"></a>
-        </div>
+            <script>
+                function checkScreenSize() {
+                    var image = document.getElementById('content-image');
+                    image.src = window.innerWidth < 768 ? "{{ url_for('static', filename='so_icon_web.png') }}" : "{{ url_for('static', filename='icon_web_white.png') }}";
+                }
         
-        <div class="hamburger" onclick="toggleMenu()">
-            &#9776;
+                // Run the function on page load
+                window.onload = checkScreenSize;
+        
+                // Run the function on window resize
+                window.onresize = checkScreenSize;
+            </script>
+            <a href="/"><img src="" id="content-image" alt="Page Icon" class="logo"></a>
+            
+            
         </div>
+        <!-- Botão Hamburger -->
+        <div class="hamburger" onclick="toggleMenu()">&#9776;</div>
+
+        <!-- Menu Mobile -->
+        <div class="nav-wrapper" id="navHumb">
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/prever" class="active">Previsão Individual</a></li>
+                    <li><a href="/prever-csv">Previsão em Lote (.CSV)</a></li>
+                    <li><a href="/contacto">Contacto</a></li>
+                    <li><a href="/sobre">Sobre</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Menu Desktop -->
         <div class="nav-wrapper" id="navMenu">
             <nav>
                 <ul>
                     <li><a href="/">Home</a></li>
                     <li class="dropdown">
-                        <a href="prever" class="dropbtn active">Modelos</a>
+                        <a href="/prever" class="dropbtn active">Modelos</a>
                         <div class="dropdown-content">
-                            <a href="#">Previsão Individual</a>
+                            <a href="/prever">Previsão Individual</a>
                             <a href="/prever-csv">Previsão em Lote (.CSV)</a>
                         </div>
                     </li>
-                    <li><a href="contacto">Contacto</a></li>
-                    <li><a href="sobre">Sobre</a></li>
+                    <li><a href="/contacto">Contacto</a></li>
+                    <li><a href="/sobre">Sobre</a></li>
                 </ul>
             </nav>
         </div>
@@ -214,9 +272,25 @@
 
     <script>
         function toggleMenu() {
-            const menu = document.getElementById('navMenu');
+            const menu = document.getElementById('navHumb');
             menu.classList.toggle('open');
         }
+    
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('#navHumb a').forEach(link => {
+                link.addEventListener('click', () => {
+                    document.getElementById('navHumb').classList.remove('open');
+                });
+            });
+    
+            document.addEventListener('click', function (event) {
+                const menu = document.getElementById('navHumb');
+                const hamburger = document.querySelector('.hamburger');
+                if (!menu.contains(event.target) && !hamburger.contains(event.target)) {
+                    menu.classList.remove('open');
+                }
+            });
+        });
     </script>
 
     <footer>

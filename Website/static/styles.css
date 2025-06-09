@@ -97,6 +97,7 @@ nav a.active::after {
     content: '';
     position: absolute;
     bottom: 0;
+    left: 0;
     width: 100%;
     height: 3px;
     background-color: rgb(178, 178, 178);
@@ -222,6 +223,11 @@ main {
     margin-top: 60vh; 
 }
 
+.hamburger, #navHumb {
+    display: none;
+}
+
+
 @media (prefers-color-scheme: dark) {
     main {
       background-color: #2b2b28;
@@ -250,13 +256,12 @@ main {
     .hamburger {
         display: block;
         font-size: 40px;
-        cursor: pointer;
         color: white;
-        padding: 10px;
-        height: 55px; /* Ensure this matches the height you want */
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        position: absolute;
+        right: 10px;
+        top: 0px;
+        cursor: pointer;
+        z-index: 1001;
     }
 
     .logo {
@@ -264,37 +269,61 @@ main {
         width: auto; /* Ensure the width adjusts proportionally */
     }
 
-    .nav-wrapper {
+    #navMenu {
         display: none;
-        width: 100%;
+    }
+
+    #navHumb {
+        display: none;
         background-color: #1E3A8A;
-    }
-
-    .nav-wrapper.open {
-        display: block;
-    }
-
-    nav ul {
+        position: absolute;
+        top: 60px; /* ajuste conforme altura do cabeçalho */
+        right: 0;
+        width: 100%;
+        z-index: 999;
         flex-direction: column;
-        width: 100%;
     }
 
-    nav li {
+    #navHumb.open {
+        display: flex;
+        top: 80px;
+    }
+
+    #navHumb nav ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        flex-direction: column;
+        display: flex;
+        align-items: center;
+        gap: 0px;
+    }
+
+    #navHumb nav li {
+        width: 100%;
         text-align: center;
-        width: 100%;
     }
 
-    nav a, .dropbtn {
-        padding: 15px;
+    #navHumb nav a {
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 18px;
+    }
+    #navHumb nav ul li a {
         display: block;
+        padding: 10px 0;
+        color: white;
+        text-decoration: none;
         width: 100%;
+        transition: background-color 0.3s ease;
+        margin: 0px;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+        border-top: 2px solid rgba(255, 255, 255, 0.2); 
     }
-
-    .dropdown-content {
-        position: static;
-        transform: none;
+    
+    #navHumb nav ul li a:hover {
         background-color: #334B8D;
-        box-shadow: none;
     }
 
     body::before {
