@@ -57,12 +57,47 @@
             background-color: #333;
             color: white;
             padding: 15px;
-            position: relative;
-            bottom: 0;
+            text-align: center;
             width: 100%;
+            box-sizing: border-box;
+            position: relative;
+            left: 0;
+            margin: 0;
+            margin-top: auto;
+        }
+
+        /* For mobile specifically */
+        @media (max-width: 768px) {
+            main {
+                width: 100%;
+                max-width: 100%;
+                margin: 12vh 0 0 0;
+                padding: 20px;
+                box-sizing: border-box;
+            }
+            
+            body {
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+                overflow-x: hidden;
+                width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            footer {
+                padding: 15px 0;
+                width: 100vw;
+                position: relative;
+                left: 0;
+            }
+            
+            html, body {
+                width: 100%;
+                overflow-x: hidden;
+            }
         }
         
-
         a.link-cor:link {
             color: #415a77;
         }
@@ -85,23 +120,41 @@
 <body>
     <header>
         <div class="logo-title">
-            <a href="/"><img src="{{ url_for('static', filename='icon_web_white.png') }}" alt="Page Icon" class="logo"></a>
+            <script>
+                function checkScreenSize() {
+                    var image = document.getElementById('content-image');
+                    image.src = window.innerWidth < 768 ? "{{ url_for('static', filename='so_icon_web.png') }}" : "{{ url_for('static', filename='icon_web_white.png') }}";
+                }
+        
+                // Run the function on page load
+                window.onload = checkScreenSize;
+        
+                // Run the function on window resize
+                window.onresize = checkScreenSize;
+            </script>
+            <a href="/"><img src="" id="content-image" alt="Page Icon" class="logo"></a>
+            
             
         </div>
-        <nav>
-            <ul style="height: 100%;">
-                <li><a href="#" class="active">Home</a></li>
-                <li class="dropdown">
-                    <a href="prever" class="dropbtn">Modelos</a>
-                    <div class="dropdown-content">
-                        <a href="/prever">Previsão Individual</a>
-                        <a href="/prever-csv">Previsão em Lote (.CSV)</a>
-                    </div>
-                </li>
-                <li><a href="contacto">Contacto</a></li>
-                <li><a href="sobre">Sobre</a></li>
-            </ul>
-        </nav>
+        <div class="hamburger" onclick="toggleMenu()">
+            &#9776;
+        </div>
+        <div class="nav-wrapper" id="navMenu">
+            <nav>
+                <ul style="height: 100%;">
+                    <li><a href="#" class="active">Home</a></li>
+                    <li class="dropdown">
+                        <a href="prever" class="dropbtn">Modelos</a>
+                        <div class="dropdown-content">
+                            <a href="/prever">Previsão Individual</a>
+                            <a href="/prever-csv">Previsão em Lote (.CSV)</a>
+                        </div>
+                    </li>
+                    <li><a href="contacto">Contacto</a></li>
+                    <li><a href="sobre">Sobre</a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
     
 
@@ -179,7 +232,12 @@
     
     </main>
 
-    
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('navMenu');
+            menu.classList.toggle('open');
+        }
+    </script>    
 
 
     <footer>

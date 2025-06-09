@@ -1,15 +1,16 @@
 body::before {
     content: '';
     position: fixed;
-    top: 0; left: 0;
-    width: 100vw;
+    top: 0;
+    left: 0;
+    right: 0;
     height: 100vh;
     z-index: -1;
-  
     background: linear-gradient(-45deg, #0d1b2a, #1b263b, #415a77, #778da9);
     background-size: 400% 400%;
     animation: gradientMove 80s ease infinite;
-  }
+}
+
   
 @keyframes gradientMove {
     0% {
@@ -231,9 +232,77 @@ main {
         color: #cbc7c7;
         border: 1px solid #444;
     }
+}
 
 
 
+/* Estilo do ícone hambúrguer */
+.hamburger {
+    display: none;
+    font-size: 30px;
+    cursor: pointer;
+    color: white;
+    padding: 10px;
+}
 
+/* Mobile layout */
+@media (max-width: 768px) {
+    .hamburger {
+        display: block;
+        font-size: 40px;
+        cursor: pointer;
+        color: white;
+        padding: 10px;
+        height: 55px; /* Ensure this matches the height you want */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-  }
+    .logo {
+        height: 65px; /* Set the height to match the hamburger menu icon */
+        width: auto; /* Ensure the width adjusts proportionally */
+    }
+
+    .nav-wrapper {
+        display: none;
+        width: 100%;
+        background-color: #1E3A8A;
+    }
+
+    .nav-wrapper.open {
+        display: block;
+    }
+
+    nav ul {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    nav li {
+        text-align: center;
+        width: 100%;
+    }
+
+    nav a, .dropbtn {
+        padding: 15px;
+        display: block;
+        width: 100%;
+    }
+
+    .dropdown-content {
+        position: static;
+        transform: none;
+        background-color: #334B8D;
+        box-shadow: none;
+    }
+
+    body::before {
+        height: 200vh;
+    }
+
+    main {
+        margin-top: 12vh;
+    }
+}
+
