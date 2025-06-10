@@ -263,7 +263,9 @@ main {
         cursor: pointer;
         z-index: 1001;
     }
-
+    header {
+        height: 8.5vh; /* Reduz a altura do cabeçalho */
+    }
     .logo {
         height: 65px; /* Set the height to match the hamburger menu icon */
         width: auto; /* Ensure the width adjusts proportionally */
@@ -286,7 +288,7 @@ main {
 
     #navHumb.open {
         display: flex;
-        top: 80px;
+        top: 72px;
     }
 
     #navHumb nav ul {
