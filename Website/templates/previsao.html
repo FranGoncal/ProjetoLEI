@@ -113,6 +113,86 @@
                 overflow-x: hidden;
             }
         }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px; /* Largura maior para mobile */
+            max-width: 80vw; /* Não ultrapassar 80% da largura da tela */
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1000; /* Garantir que fique acima de tudo */
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 14px;
+            word-wrap: break-word;
+        }
+
+        /* Posicionamento padrão - acima do ícone */
+        .tooltip .tooltiptext {
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 5px;
+        }
+
+        /* Flecha da tooltip */
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent;
+        }
+        
+
+        /* Para mobile - ajustar posição se estiver perto das bordas */
+        @media (max-width: 768px) {
+            .tooltip.active .tooltiptext {
+                visibility: visible;
+                opacity: 1;
+            }
+            
+            /* Se a tooltip estiver muito perto da borda esquerda */
+            .tooltip.left-edge .tooltiptext {
+                left: 0;
+                transform: translateX(0);
+            }
+            
+            /* Se a tooltip estiver muito perto da borda direita */
+            .tooltip.right-edge .tooltiptext {
+                left: auto;
+                right: 0;
+                transform: translateX(0);
+            }
+            
+            /* Se a tooltip estiver muito perto do topo */
+            .tooltip.top-edge .tooltiptext {
+                bottom: auto;
+                top: 100%;
+                margin-top: 5px;
+                margin-bottom: 0;
+            }
+            
+            .tooltip.top-edge .tooltiptext::after {
+                top: auto;
+                bottom: 100%;
+                border-color: transparent transparent #555 transparent;
+            }
+        }
+
+
         
     </style>
 </head>
@@ -184,7 +264,7 @@
             </div>
 
             <div class="form-group">
-                <label for="tenure">Tempo de permanência no serviço (meses):</label>
+                <label for="tenure">Tempo de permanência no serviço (meses): <div class="tooltip">&#128161;<span class="tooltiptext">Tempo decorrido entre o momento inicial que o cliente aderiu ao serviço e o momento do abandono ou momento atual. </span></div></label>
                 <input type="number" id="tenure" name="tenure" min="0" required>
             </div>
 
@@ -198,7 +278,7 @@
             </div>
 
             <div class="form-group">
-                <label>Possui um serviço de segurança online?</label>
+                <label>Possui um serviço de segurança online? <div class="tooltip">&#128161;<span class="tooltiptext">Atributo que descreve se o cliente está subscrito a um serviço adicional de segurança online.</span></div></label>
                 <div class="radio-group">
                     <input type="radio" id="onlineSecurityYes" name="onlineSecurity" value="yes" required>
                     <label for="onlineSecurityYes">Sim</label>
@@ -208,7 +288,7 @@
             </div>
 
             <div class="form-group">
-                <label>Possui um serviço de suporte técnico?</label>
+                <label>Possui um serviço de suporte técnico? <div class="tooltip">&#128161;<span class="tooltiptext">Atributo que descreve se o cliente está subscrito a um serviço adicional de suporte adicional de suporte da empresa.</span></div></label>
                 <div class="radio-group">
                     <input type="radio" id="techSupportYes" name="techSupport" value="yes" required>
                     <label for="techSupportYes">Sim</label>
@@ -277,7 +357,20 @@
             menu.classList.toggle('open');
         }
     
+        // Função para fechar todas as tooltips
+        function closeAllTooltips() {
+            document.querySelectorAll('.tooltip.active').forEach(function(tooltip) {
+                tooltip.classList.remove('active', 'left-edge', 'right-edge', 'top-edge');
+                const tooltipText = tooltip.querySelector('.tooltiptext');
+                if (tooltipText) {
+                    tooltipText.style.visibility = 'hidden';
+                    tooltipText.style.opacity = '0';
+                }
+            });
+        }
+    
         document.addEventListener('DOMContentLoaded', () => {
+            // Menu mobile
             document.querySelectorAll('#navHumb a').forEach(link => {
                 link.addEventListener('click', () => {
                     document.getElementById('navHumb').classList.remove('open');
@@ -291,8 +384,87 @@
                     menu.classList.remove('open');
                 }
             });
+    
+            // Tooltips
+            var tooltips = document.querySelectorAll('.tooltip');
+    
+            tooltips.forEach(function(tooltip) {
+                // Evento para dispositivos móveis
+                tooltip.addEventListener('click', function(event) {
+                    if (window.innerWidth <= 768) {
+                        event.preventDefault();
+                        event.stopPropagation();
+    
+                        const isActive = this.classList.contains('active');
+    
+                        closeAllTooltips();
+    
+                        if (!isActive) {
+                            this.classList.add('active');
+                            adjustTooltipPosition(this);
+                        }
+                    }
+                });
+    
+                // Eventos para desktop
+                tooltip.addEventListener('mouseenter', function() {
+                    if (window.innerWidth > 768) {
+                        closeAllTooltips();
+                        this.classList.add('active');
+                        adjustTooltipPosition(this);
+                    }
+                });
+    
+                tooltip.addEventListener('mouseleave', function() {
+                    if (window.innerWidth > 768) {
+                        this.classList.remove('active');
+                        const tooltipText = this.querySelector('.tooltiptext');
+                        if (tooltipText) {
+                            tooltipText.style.visibility = 'hidden';
+                            tooltipText.style.opacity = '0';
+                        }
+                    }
+                });
+            });
+    
+            // Fechar tooltips ao clicar em qualquer lugar fora
+            document.addEventListener('click', function(event) {
+                if (window.innerWidth <= 768) {
+                    const clickedTooltip = event.target.closest('.tooltip');
+                    if (!clickedTooltip) {
+                        closeAllTooltips();
+                    }
+                }
+            });
+    
+            function adjustTooltipPosition(tooltip) {
+                const tooltipText = tooltip.querySelector('.tooltiptext');
+                if (!tooltipText) return;
+    
+                tooltipText.style.visibility = 'visible';
+                tooltipText.style.opacity = '1';
+    
+                const tooltipRect = tooltipText.getBoundingClientRect();
+                const viewportWidth = window.innerWidth;
+                const viewportHeight = window.innerHeight;
+    
+                tooltip.classList.remove('left-edge', 'right-edge', 'top-edge');
+    
+                if (tooltipRect.left < 10) {
+                    tooltip.classList.add('left-edge');
+                }
+    
+                if (tooltipRect.right > viewportWidth - 10) {
+                    tooltip.classList.add('right-edge');
+                }
+    
+                if (tooltipRect.top < 10) {
+                    tooltip.classList.add('top-edge');
+                }
+            }
         });
     </script>
+    
 
     <footer>
         <p>&copy; 2025 Customer Churn Predictor. Projeto acadêmico para previsão de customer churn no setor das telecomunicações.</p>
