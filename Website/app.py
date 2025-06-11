@@ -279,6 +279,20 @@ def manifest():
 
 @app.route('/submit-data', methods=['POST'])
 def submit_data():
+    ### Captcha ###
+    captcha_response = request.form.get('g-recaptcha-response')
+    load_dotenv()
+    secret = os.environ.get('RECAPTCHA_SECRET')
+    verify_url = 'https://www.google.com/recaptcha/api/siteverify'
+    payload = {'secret': secret, 'response': captcha_response}
+    r = requests.post(verify_url, data=payload)
+    result = r.json()
+
+    if not result.get('success', False):
+        flash("Falha na verificação do CAPTCHA. Tente novamente.")
+        return redirect(url_for('preverCsv'))
+
+    ### CosmosBD ###
     data = request.form
     dados = {
         'id': str(uuid4()),
