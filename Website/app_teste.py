@@ -54,6 +54,7 @@ COSMOS_KEY = os.getenv("COSMOS_KEY")
 DATABASE_NAME = "databaseFran"
 CONTAINER_NAME = "dados"
 
+#No teste nao e necessário conectar ao CosmosDB
 '''client = CosmosClient(COSMOS_ENDPOINT, COSMOS_KEY)
 database = client.create_database_if_not_exists(id=DATABASE_NAME)
 container = database.create_container_if_not_exists(
@@ -79,8 +80,8 @@ def preverCsv():
 
 @app.route("/previsao-csv", methods=["POST"])
 def previsaoCsv():
-    ### Captcha ###
-    captcha_response = request.form.get('g-recaptcha-response')
+    ### Captcha (nao necessario em teste) ###
+    '''captcha_response = request.form.get('g-recaptcha-response')
     load_dotenv()
     secret = os.environ.get('RECAPTCHA_SECRET')
     verify_url = 'https://www.google.com/recaptcha/api/siteverify'
@@ -90,7 +91,7 @@ def previsaoCsv():
 
     if not result.get('success', False):
         flash("Falha na verificação do CAPTCHA. Tente novamente.")
-        return redirect(url_for('preverCsv'))
+        return redirect(url_for('preverCsv'))'''
     
     
     if "csvfile" not in request.files:
@@ -238,26 +239,6 @@ def previsao():
     #z=X
     return render_template("previsao_resultado.html", res=res_label, probabilidade=probabilidade, img_data=img_str)
 
-'''
-@app.route('/lime_explanation', methods=['POST'])
-def lime_explanation():
-    #image_path = 'static\icon_web_1.png'
-    #return send_file(image_path, mimetype='image/png')
-    print("Z =====> "+str(z))
-
-
-    fig = exp.as_pyplot_figure()
-    prediction = loaded_model.predict(z)[0]
-    plt.title(f"Explicação LIME para a predição: {'Churn' if prediction == 1 else 'No Churn'}")
-
-    # Salvar a figura em um buffer de bytes
-    img_buffer = io.BytesIO()
-    plt.savefig(img_buffer, format='png')
-    img_buffer.seek(0)
-
-    # Retornar a imagem
-    return send_file(img_buffer, mimetype='image/png')
-'''
 
 @app.route("/contacto")
 def contacto():
@@ -283,8 +264,8 @@ def manifest():
 
 @app.route('/submit-data', methods=['POST'])
 def submit_data():
-    ### Captcha ###
-    captcha_response = request.form.get('g-recaptcha-response')
+    ### Captcha (nao necessario em teste) ###
+    '''captcha_response = request.form.get('g-recaptcha-response')
     load_dotenv()
     secret = os.environ.get('RECAPTCHA_SECRET')
     verify_url = 'https://www.google.com/recaptcha/api/siteverify'
@@ -294,7 +275,7 @@ def submit_data():
 
     if not result.get('success', False):
         flash("Falha na verificação do CAPTCHA. Tente novamente.")
-        return redirect(url_for('preverCsv'))
+        return redirect(url_for('preverCsv'))'''
 
     ### CosmosBD ###
     data = request.form
@@ -315,7 +296,8 @@ def submit_data():
     }
 
     try:
-        container.create_item(body=dados)
+        #Nao e necessaria criacao do item no CosmosDB em teste
+        #container.create_item(body=dados)
         return jsonify({"mensagem": "dados guardados!"}), 201
     except Exception as e:
         print(e)

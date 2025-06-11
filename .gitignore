@@ -3,6 +3,7 @@
 /.ipynb_checkpoints/
 
 /Website/.env
+/Website/__pycache__/
 
 dockerfileComands.txt
 
@@ -10,3 +11,5 @@ dockerfileComands.txt
 /AzureStruct/.terraform.lock.hcl
 /AzureStruct/terraform.tfstate
 /AzureStruct/terraform.tfstate.backup
+
+
