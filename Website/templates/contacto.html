@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='so_icon_web.png') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <title>Customer Churn Predictor</title>
     <style>
         body {
@@ -197,6 +198,43 @@
                 border-color: transparent transparent #555 transparent;
             }
         }
+        .highlight-form {
+            background-color: white; /* Cor de fundo branca para contraste */
+            border: 2px solid #525252; /* Contorno azul */
+            border-radius: 10px; /* Cantos arredondados */
+            padding: 20px; /* Espaçamento interno */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); /* Sombra suave para destacar */
+            margin-top: 20px; /* Margem superior para separar do conteúdo acima */
+        }
+        @media (prefers-color-scheme: dark) {
+            .highlight-form {
+                background-color: #3a3939; /* Cor de fundo branca para contraste */
+                border: 2px solid #cacaca; /* Contorno azul */
+            }
+        }
+        .social-icon {
+            width: 3rem; /* Define a largura do ícone usando rem */
+            height: 3rem; /* Define a altura do ícone usando rem */
+            font-size: 3rem; /* Define o tamanho da fonte do ícone usando rem */
+        }
+
+        /* Ajuste para telas menores */
+        @media (max-width: 768px) {
+            .social-icon {
+                width: 1.75rem; /* Ajusta a largura para telas menores */
+                height: 1.75rem; /* Ajusta a altura para telas menores */
+                font-size: 1.75rem; /* Ajusta o tamanho da fonte para telas menores */
+            }
+        }
+
+        /* Ajuste para telas muito pequenas */
+        @media (max-width: 480px) {
+            .social-icon {
+                width: 1.5rem; /* Ajusta a largura para telas muito pequenas */
+                height: 1.5rem; /* Ajusta a altura para telas muito pequenas */
+                font-size: 1.5rem; /* Ajusta o tamanho da fonte para telas muito pequenas */
+            }
+        }
     </style>
 </head>
 <body>
@@ -254,20 +292,97 @@
     </header>
 
     <main>
-        <h1>Contacto</h1>
-        <p>os Contactos são estes...</p>
+        <h1>&#128236; Contacto</h1>
 
+        <section id="contacto" style="text-align: center; padding: 2rem; font-family: sans-serif;">
+            
+            <p>Em caso de dúvidas ou sugestões de melhorias, entre em contato com Francisco Gonçalves, responsável pelo desenvolvimento desta aplicação web, através do LinkedIn ou e-mail.</p>
+            <p style="margin-bottom: 2rem;">Este projeto foi desenvolvido num repositório público no GitHub e está aberto a contribuições via fork.</p>
 
-        <form method="post" action="/submit-data">
-            Contribuir no Estudo:
-            <div class="form-group">
-                <label for="name">Nome:</label>
-                <input type="text" id="name" name="name" required>
+            <!-- Container com ícones alinhados -->
+            <div style="display: flex; justify-content: center; gap: 40px; align-items: center;">
+          
+              <!-- GitHub -->
+              <a href="https://github.com/FranGoncal/ProjetoLEI" target="_blank" title="GitHub"
+                 style="color: inherit; text-decoration: none;">
+                <div id="github" style="transition: transform 0.2s;">
+                  <i data-lucide="github" class="social-icon"></i>
+                </div>
+              </a>
+          
+              <!-- LinkedIn -->
+              <a href="https://www.linkedin.com/in/francisco-goncalves-link" target="_blank" title="LinkedIn"
+                 style="color: inherit; text-decoration: none;">
+                <div id="linkedin" style="transition: transform 0.2s;">
+                  <i data-lucide="linkedin" class="social-icon"></i>
+                </div>
+              </a>
+          
+              <!-- Email + tooltip, tudo dentro do botão -->
+              <button onclick="copyEmail()" title="Copiar Email"
+                      style="position: relative; margin-top: 0px; background: none; border: none; cursor: pointer; color: inherit; transition: transform 0.2s;">
+                <div id="email-icon">
+                  <i data-lucide="mail" class="social-icon"></i>
+                </div>
+                <!-- Tooltip aparece por cima -->
+                <div id="copy-msg" style="
+                  position: absolute;
+                  top: -30px;
+                  left: 50%;
+                  transform: translateX(-50%);
+                  background: #222;
+                  color: #fff;
+                  padding: 4px 8px;
+                  font-size: 0.75rem;
+                  border-radius: 4px;
+                  display: none;
+                  white-space: nowrap;
+                ">📋 Email copiado!</div>
+              </button>
             </div>
+          </section>
+          
+          <script>
+            lucide.createIcons();
+          
+            function copyEmail() {
+              const email = "gfrancisco@ipcbcampus.pt";
+              navigator.clipboard.writeText(email).then(() => {
+                const msg = document.getElementById("copy-msg");
+                msg.style.display = "block";
+                setTimeout(() => (msg.style.display = "none"), 2500);
+              });
+            }
+          
+            // Hover animation
+            const icons = ["github", "linkedin", "email-icon"];
+            icons.forEach(id => {
+              const el = document.getElementById(id);
+              el.addEventListener("mouseover", () => el.style.transform = "scale(1.2)");
+              el.addEventListener("mouseout", () => el.style.transform = "scale(1)");
+            });
+          </script>
+        
+
+
+        <form method="post" action="/submit-data" class="highlight-form">
+            Tem alguma experiência que possa partilhar conosco? Contribua para o estudo ao preencher este formulário:
+            <div class="form-group" style="display: flex; flex-direction: column; margin-bottom: 1rem;">
+                <label for="name" style="margin-bottom: 0.4rem;">Nome:</label>
+                <input type="text" id="name" name="name"
+                       placeholder="Ex: André Nunes"
+                       style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px;"
+                       required>
+              </div>
 
             <div class="form-group">
-                <label for="ccnif">CC/NIF:</label>
-                <input type="number" id="ccnif" name="ccnif" min="0" max="999999999" step="1" required>
+                <label for="ccnif" >CC/NIF:</label>
+                <input type="text" name="ccnif" id="ccnif"
+                    minlength="8" maxlength="9"
+                    pattern="\d{8,9}"
+                    title="Introduz 8 ou 9 dígitos"
+                    style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px;"
+                    required>
             </div>
 
             <div class="form-group">
@@ -363,7 +478,7 @@
 
 
 
-        <a href="/"><button>Página Inicial</button></a>
+        <!---<a href="/"><button>Página Inicial</button></a>--->
     </main>
 
     <script>
