@@ -473,6 +473,31 @@
                 </div>
             </div>
 
+
+            <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+            <center><div class="g-recaptcha" data-sitekey="6Lco1lorAAAAAB2-0iLRoPbLDFT6_SAEZLmyV57V"></div></center>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div id="flash-message" class="alert">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+                </div>
+
+                <script>
+                // Aguarda 5 segundos e remove a mensagem
+                setTimeout(function() {
+                    const flash = document.getElementById('flash-message');
+                    if (flash) {
+                    flash.style.transition = "opacity 0.5s ease-out";
+                    flash.style.opacity = "0";
+                    setTimeout(() => flash.remove(), 500); // remove após o fade
+                    }
+                }, 5000); // 5000 milissegundos = 5 segundos
+                </script>
+            {% endif %}
+            {% endwith %}
+
             <button type="submit">Submeter</button>
         </form>
 
