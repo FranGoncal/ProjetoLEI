@@ -54,13 +54,13 @@ COSMOS_KEY = os.getenv("COSMOS_KEY")
 DATABASE_NAME = "databaseFran"
 CONTAINER_NAME = "dados"
 
-client = CosmosClient(COSMOS_ENDPOINT, COSMOS_KEY)
+'''client = CosmosClient(COSMOS_ENDPOINT, COSMOS_KEY)
 database = client.create_database_if_not_exists(id=DATABASE_NAME)
 container = database.create_container_if_not_exists(
     id=CONTAINER_NAME,
     partition_key=PartitionKey(path="/nome"),
     offer_throughput=400
-)
+)'''
 
 @app.route("/")
 def home():

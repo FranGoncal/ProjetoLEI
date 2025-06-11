@@ -65,3 +65,34 @@ resource "azurerm_cosmosdb_sql_container" "container" {
     }
   }
 }
+
+
+
+
+#### Registry
+resource "azurerm_container_registry" "acr" {
+  name                     = "acrprojfran"           # Nome único globalmente
+  resource_group_name      = azurerm_resource_group.rg.name
+  location                 = azurerm_resource_group.rg.location
+  sku                      = "Basic"                 # Pode ser Basic, Standard ou Premium
+  admin_enabled            = true                    # Ativa o administrador (útil para autenticação simples)
+
+  # Opcional, tags para organizar recursos
+  tags = {
+    environment = "dev"
+    project     = "ProjetoLEI"
+  }
+}
+
+output "acr_login_server" {
+  value = azurerm_container_registry.acr.login_server
+}
+
+output "acr_admin_username" {
+  value = azurerm_container_registry.acr.admin_username
+}
+
+output "acr_admin_password" {
+  value     = azurerm_container_registry.acr.admin_password
+  sensitive = true
+}
