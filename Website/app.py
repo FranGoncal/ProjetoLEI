@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request, send_file, redirect, url_for, flash
+from flask import Flask, render_template, request, send_file, redirect, url_for, flash, jsonify
 import pandas as pd
+from azure.cosmos import CosmosClient, PartitionKey
 import pickle
 import numpy as np
 import joblib
@@ -10,6 +11,7 @@ import matplotlib.pyplot as plt
 import requests
 import os
 from dotenv import load_dotenv
+from uuid import uuid4
 
 loaded_models = {}
 
@@ -44,8 +46,21 @@ scaler = joblib.load('scalers/scaler.pkl')
 z = 0
 
 app = Flask(__name__) 
+
 load_dotenv()
 app.secret_key = os.getenv("SECRET_KEY")
+COSMOS_ENDPOINT = "https://accfran.documents.azure.com:443/"
+COSMOS_KEY = os.getenv("COSMOS_KEY")
+DATABASE_NAME = "databaseFran"
+CONTAINER_NAME = "dados"
+
+client = CosmosClient(COSMOS_ENDPOINT, COSMOS_KEY)
+database = client.create_database_if_not_exists(id=DATABASE_NAME)
+container = database.create_container_if_not_exists(
+    id=CONTAINER_NAME,
+    partition_key=PartitionKey(path="/nome"),
+    offer_throughput=400
+)
 
 @app.route("/")
 def home():
@@ -257,6 +272,36 @@ def service_worker():
 @app.route('/manifest.json')
 def manifest():
     return send_from_directory('static', 'manifest.json')
+
+
+
+
+
+@app.route('/submit-data', methods=['POST'])
+def submit_data():
+    data = request.form
+    dados = {
+        'id': str(uuid4()),
+        'nome': data.get('name'),
+        'cc_nif': data.get('ccnif'),
+        'dependents': data.get('dependents'),
+        'tenure': data.get('tenure'),
+        'internetService': data.get('internetService'),
+        'onlineSecurity': data.get('onlineSecurity'),
+        'techSupport': data.get('techSupport'),
+        'contract': data.get('contract'),
+        'paperlessBilling': data.get('paperlessBilling'),
+        'paymentMethod': data.get('paymentMethod'),
+        'monthlyCharges': data.get('monthlyCharges'),
+        'churn': data.get('churn')
+    }
+
+    try:
+        container.create_item(body=dados)
+        return jsonify({"mensagem": "dados guardados!"}), 201
+    except Exception as e:
+        print(e)
+        return jsonify({"erro": "Falha ao guardar dados."}), 500
 
 if __name__ == "__main__":
     #app.run(debug=True)

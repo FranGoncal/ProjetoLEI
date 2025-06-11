@@ -5,3 +5,8 @@
 /Website/.env
 
 dockerfileComands.txt
+
+/AzureStruct/.terraform/
+/AzureStruct/.terraform.lock.hcl
+/AzureStruct/terraform.tfstate
+/AzureStruct/terraform.tfstate.backup

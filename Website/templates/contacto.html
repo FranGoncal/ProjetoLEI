@@ -88,7 +88,115 @@
                 overflow-x: hidden;
             }
         }
-       
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-align: left;
+            width: 100%;
+        }
+        input[type="radio"], input[type="number"], select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .radio-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .radio-group label {
+            margin-bottom: 0;
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px; /* Largura maior para mobile */
+            max-width: 80vw; /* Não ultrapassar 80% da largura da tela */
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1000; /* Garantir que fique acima de tudo */
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 14px;
+            word-wrap: break-word;
+        }
+
+        /* Posicionamento padrão - acima do ícone */
+        .tooltip .tooltiptext {
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 5px;
+        }
+
+        /* Flecha da tooltip */
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent;
+        }
+        
+
+        /* Para mobile - ajustar posição se estiver perto das bordas */
+        @media (max-width: 768px) {
+            .tooltip.active .tooltiptext {
+                visibility: visible;
+                opacity: 1;
+            }
+            
+            /* Se a tooltip estiver muito perto da borda esquerda */
+            .tooltip.left-edge .tooltiptext {
+                left: 0;
+                transform: translateX(0);
+            }
+            
+            /* Se a tooltip estiver muito perto da borda direita */
+            .tooltip.right-edge .tooltiptext {
+                left: auto;
+                right: 0;
+                transform: translateX(0);
+            }
+            
+            /* Se a tooltip estiver muito perto do topo */
+            .tooltip.top-edge .tooltiptext {
+                bottom: auto;
+                top: 100%;
+                margin-top: 5px;
+                margin-bottom: 0;
+            }
+            
+            .tooltip.top-edge .tooltiptext::after {
+                top: auto;
+                bottom: 100%;
+                border-color: transparent transparent #555 transparent;
+            }
+        }
     </style>
 </head>
 <body>
@@ -147,7 +255,114 @@
 
     <main>
         <h1>Contacto</h1>
-        <p>Contactos...</p>
+        <p>os Contactos são estes...</p>
+
+
+        <form method="post" action="/submit-data">
+            Contribuir no Estudo:
+            <div class="form-group">
+                <label for="name">Nome:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="ccnif">CC/NIF:</label>
+                <input type="number" id="ccnif" name="ccnif" min="0" max="999999999" step="1" required>
+            </div>
+
+            <div class="form-group">
+                <label>Tem dependentes?</label>
+                <div class="radio-group">
+                    <input type="radio" id="dependentsYes" name="dependents" value="yes" required>
+                    <label for="dependentsYes">Sim</label>
+                    <input type="radio" id="dependentsNo" name="dependents" value="no" required>
+                    <label for="dependentsNo">Não</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="tenure">Tempo de permanência no serviço (meses): <div class="tooltip">&#128161;<span class="tooltiptext">Tempo decorrido entre o momento inicial que o cliente aderiu ao serviço e o momento do abandono ou momento atual. </span></div></label>
+                <input type="number" id="tenure" name="tenure" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label for="internetService">Serviço de internet:</label>
+                <select id="internetService" name="internetService" required>
+                    <option value="dsl">DSL</option>
+                    <option value="fiber_optic">Fibra Óptica</option>
+                    <option value="none">Nenhum</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Possui um serviço de segurança online? <div class="tooltip">&#128161;<span class="tooltiptext">Atributo que descreve se o cliente está subscrito a um serviço adicional de segurança online.</span></div></label>
+                <div class="radio-group">
+                    <input type="radio" id="onlineSecurityYes" name="onlineSecurity" value="yes" required>
+                    <label for="onlineSecurityYes">Sim</label>
+                    <input type="radio" id="onlineSecurityNo" name="onlineSecurity" value="no" required>
+                    <label for="onlineSecurityNo">Não</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Possui um serviço de suporte técnico? <div class="tooltip">&#128161;<span class="tooltiptext">Atributo que descreve se o cliente está subscrito a um serviço adicional de suporte adicional de suporte da empresa.</span></div></label>
+                <div class="radio-group">
+                    <input type="radio" id="techSupportYes" name="techSupport" value="yes" required>
+                    <label for="techSupportYes">Sim</label>
+                    <input type="radio" id="techSupportNo" name="techSupport" value="no" required>
+                    <label for="techSupportNo">Não</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="contract">Tipo de contrato:</label>
+                <select id="contract" name="contract" required>
+                    <option value="monthly">Mensal</option>
+                    <option value="one_year">1 Ano</option>
+                    <option value="two_year">2 Anos</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Faturação eletrônica?</label>
+                <div class="radio-group">
+                    <input type="radio" id="paperlessBillingYes" name="paperlessBilling" value="yes" required>
+                    <label for="paperlessBillingYes">Sim</label>
+                    <input type="radio" id="paperlessBillingNo" name="paperlessBilling" value="no" required>
+                    <label for="paperlessBillingNo">Não</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="paymentMethod">Método de pagamento:</label>
+                <select id="paymentMethod" name="paymentMethod" required>
+                    <option value="credit_card">Cartão de Crédito</option>
+                    <option value="bank_transfer">Transferência Bancária</option>
+                    <option value="electronic_check">cheque Enviado Eletronicamente</option>
+                    <option value="mailed_check">Cheque por Correio</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="monthlyCharges">Mensalidade:</label>
+                <input type="number" id="monthlyCharges" name="monthlyCharges" min="0" step="0.01" required>
+            </div>
+
+            <div class="form-group">
+                <label>Abandonou o serviço?</label>
+                <div class="radio-group">
+                    <input type="radio" id="churnYes" name="churn" value="yes" required>
+                    <label for="churnYes">Sim</label>
+                    <input type="radio" id="churnNo" name="churn" value="no" required>
+                    <label for="churnNo">Não</label>
+                </div>
+            </div>
+
+            <button type="submit">Submeter</button>
+        </form>
+
+
+
         <a href="/"><button>Página Inicial</button></a>
     </main>
 
@@ -157,7 +372,20 @@
             menu.classList.toggle('open');
         }
     
+        // Função para fechar todas as tooltips
+        function closeAllTooltips() {
+            document.querySelectorAll('.tooltip.active').forEach(function(tooltip) {
+                tooltip.classList.remove('active', 'left-edge', 'right-edge', 'top-edge');
+                const tooltipText = tooltip.querySelector('.tooltiptext');
+                if (tooltipText) {
+                    tooltipText.style.visibility = 'hidden';
+                    tooltipText.style.opacity = '0';
+                }
+            });
+        }
+    
         document.addEventListener('DOMContentLoaded', () => {
+            // Menu mobile
             document.querySelectorAll('#navHumb a').forEach(link => {
                 link.addEventListener('click', () => {
                     document.getElementById('navHumb').classList.remove('open');
@@ -171,6 +399,84 @@
                     menu.classList.remove('open');
                 }
             });
+    
+            // Tooltips
+            var tooltips = document.querySelectorAll('.tooltip');
+    
+            tooltips.forEach(function(tooltip) {
+                // Evento para dispositivos móveis
+                tooltip.addEventListener('click', function(event) {
+                    if (window.innerWidth <= 768) {
+                        event.preventDefault();
+                        event.stopPropagation();
+    
+                        const isActive = this.classList.contains('active');
+    
+                        closeAllTooltips();
+    
+                        if (!isActive) {
+                            this.classList.add('active');
+                            adjustTooltipPosition(this);
+                        }
+                    }
+                });
+    
+                // Eventos para desktop
+                tooltip.addEventListener('mouseenter', function() {
+                    if (window.innerWidth > 768) {
+                        closeAllTooltips();
+                        this.classList.add('active');
+                        adjustTooltipPosition(this);
+                    }
+                });
+    
+                tooltip.addEventListener('mouseleave', function() {
+                    if (window.innerWidth > 768) {
+                        this.classList.remove('active');
+                        const tooltipText = this.querySelector('.tooltiptext');
+                        if (tooltipText) {
+                            tooltipText.style.visibility = 'hidden';
+                            tooltipText.style.opacity = '0';
+                        }
+                    }
+                });
+            });
+    
+            // Fechar tooltips ao clicar em qualquer lugar fora
+            document.addEventListener('click', function(event) {
+                if (window.innerWidth <= 768) {
+                    const clickedTooltip = event.target.closest('.tooltip');
+                    if (!clickedTooltip) {
+                        closeAllTooltips();
+                    }
+                }
+            });
+    
+            function adjustTooltipPosition(tooltip) {
+                const tooltipText = tooltip.querySelector('.tooltiptext');
+                if (!tooltipText) return;
+    
+                tooltipText.style.visibility = 'visible';
+                tooltipText.style.opacity = '1';
+    
+                const tooltipRect = tooltipText.getBoundingClientRect();
+                const viewportWidth = window.innerWidth;
+                const viewportHeight = window.innerHeight;
+    
+                tooltip.classList.remove('left-edge', 'right-edge', 'top-edge');
+    
+                if (tooltipRect.left < 10) {
+                    tooltip.classList.add('left-edge');
+                }
+    
+                if (tooltipRect.right > viewportWidth - 10) {
+                    tooltip.classList.add('right-edge');
+                }
+    
+                if (tooltipRect.top < 10) {
+                    tooltip.classList.add('top-edge');
+                }
+            }
         });
     </script>
 
