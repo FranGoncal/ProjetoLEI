@@ -327,7 +327,19 @@
             const installBtn = document.querySelector('.add-button');
             const iosMsg = document.getElementById('ios-message');
 
-            // ✅ Mostrar botão no mobile sempre, ou Chrome/Edge no PC
+            let isPwaInstalled = false;
+
+            // Detecta se já está instalada
+            if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+                isPwaInstalled = true;
+            }
+
+            if (isPwaInstalled) {
+                installBtn.style.display = 'none';
+                return; // Não continuar com a lógica de instalação
+            }
+
+            // Mostrar botão no mobile sempre, ou Chrome/Edge no PC
             if (isMobile() || isDesktopChromeOrEdge()) {
                 installBtn.style.display = 'inline-block';
             } else {
@@ -338,7 +350,7 @@
             if (isIos() && !isInStandaloneMode()) {
                 installBtn.addEventListener('click', () => {
                     iosMsg.style.display = 'block';
-                    
+
                     // Auto-hide depois de 10 segundos
                     setTimeout(() => {
                         hideIosMessage();
@@ -353,17 +365,18 @@
                     installBtn.addEventListener('click', () => {
                         deferredPrompt.prompt();
                         deferredPrompt.userChoice.then((choiceResult) => {
-                        if (choiceResult.outcome === 'accepted') {
-                            console.log('Utilizador aceitou a instalação');
-                        } else {
-                            console.log('Utilizador recusou a instalação');
-                        }
-                        deferredPrompt = null;
+                            if (choiceResult.outcome === 'accepted') {
+                                console.log('Utilizador aceitou a instalação');
+                            } else {
+                                console.log('Utilizador recusou a instalação');
+                            }
+                            deferredPrompt = null;
                         });
                     });
                 });
             }
         });
+
 
         function hideIosMessage() {
             const iosMsg = document.getElementById('ios-message');
