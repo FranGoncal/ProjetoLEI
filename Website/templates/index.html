@@ -181,6 +181,20 @@
             <a href="prever"><button>Explorar Modelos</button></a>
             <button class="add-button" style="background-color: rgb(32, 120, 150);">Instalar Aplicação</button>
             <script src="{{ url_for('static', filename='app.js') }}"></script>
+
+            <div id="ios-message" style="display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+                background-color: #fff3cd; color: #333; padding: 15px 20px; border-radius: 8px; border: 1px solid #ffeeba;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 9999; max-width: 90%; text-align: left;">
+                <strong>Instalar no iPhone:</strong>
+                <ol style="margin-top: 10px; margin-bottom: 0; padding-left: 1.2em;">
+                    <li>Tocar no botão <strong>“Partilhar”</strong></li>
+                    <li>Selecionar <strong>“Adicionar ao Ecrã Principal”</strong></li>
+                    <li>Clicar em <strong>“Adicionar”</strong></li>
+                </ol>
+                <button onclick="hideIosMessage()" style="margin-top: 10px; background-color: #d39e00; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; float: right;">Fechar</button>
+            </div>
+
+
         </div>
 
         <hr>
@@ -288,6 +302,77 @@
           });
         }
       </script>
+      <script>
+        function isMobile() {
+            return /android|iphone|ipad|ipod/i.test(navigator.userAgent);
+        }
+
+        function isDesktopChromeOrEdge() {
+            const ua = navigator.userAgent.toLowerCase();
+            const isChrome = ua.includes("chrome") && !ua.includes("edg") && !ua.includes("opr");
+            const isEdge = ua.includes("edg");
+            const isDesktop = !isMobile();
+            return isDesktop && (isChrome || isEdge);
+        }
+
+        function isIos() {
+            return /iphone|ipad|ipod/i.test(navigator.userAgent);
+        }
+
+        function isInStandaloneMode() {
+            return ('standalone' in window.navigator) && window.navigator.standalone;
+        }
+
+        window.addEventListener('load', () => {
+            const installBtn = document.querySelector('.add-button');
+            const iosMsg = document.getElementById('ios-message');
+
+            // ✅ Mostrar botão no mobile sempre, ou Chrome/Edge no PC
+            if (isMobile() || isDesktopChromeOrEdge()) {
+                installBtn.style.display = 'inline-block';
+            } else {
+                installBtn.style.display = 'none';
+                return;
+            }
+
+            if (isIos() && !isInStandaloneMode()) {
+                installBtn.addEventListener('click', () => {
+                    iosMsg.style.display = 'block';
+                    
+                    // Auto-hide depois de 10 segundos
+                    setTimeout(() => {
+                        hideIosMessage();
+                    }, 10000);
+                });
+            } else {
+                // Android + Chrome/Edge
+                window.addEventListener('beforeinstallprompt', (e) => {
+                    e.preventDefault();
+                    deferredPrompt = e;
+
+                    installBtn.addEventListener('click', () => {
+                        deferredPrompt.prompt();
+                        deferredPrompt.userChoice.then((choiceResult) => {
+                        if (choiceResult.outcome === 'accepted') {
+                            console.log('Utilizador aceitou a instalação');
+                        } else {
+                            console.log('Utilizador recusou a instalação');
+                        }
+                        deferredPrompt = null;
+                        });
+                    });
+                });
+            }
+        });
+
+        function hideIosMessage() {
+            const iosMsg = document.getElementById('ios-message');
+            iosMsg.style.display = 'none';
+        }
+
+
+      </script>
+      
 
 </body>
 </html>
