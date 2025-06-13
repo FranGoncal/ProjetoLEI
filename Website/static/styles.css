@@ -259,12 +259,15 @@ main {
         color: white;
         position: absolute;
         right: 10px;
-        top: 0px;
+        top: 50%;
+        transform: translateY(-50%); /* Centraliza verticalmente */
         cursor: pointer;
         z-index: 1001;
     }
+
     header {
-        height: 8.5vh; /* Reduz a altura do cabeçalho */
+        height: 8.5vh;
+        align-items: center; /* também aqui */
     }
     .logo {
         height: 65px; /* Set the height to match the hamburger menu icon */
@@ -279,7 +282,7 @@ main {
         display: none;
         background-color: #1E3A8A;
         position: absolute;
-        top: 60px; /* ajuste conforme altura do cabeçalho */
+        top: 0px; /* ajuste conforme altura do cabeçalho */
         right: 0;
         width: 100%;
         z-index: 999;
@@ -288,7 +291,7 @@ main {
 
     #navHumb.open {
         display: flex;
-        top: 72px;
+        top: 8.5vh;
     }
 
     #navHumb nav ul {

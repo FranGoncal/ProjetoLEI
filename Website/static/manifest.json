@@ -19,12 +19,12 @@
     ],
     "screenshots": [
     {
-      "src": "screenshot-1.png",
+      "src": "mob1.png",
       "sizes": "360x640",
       "type": "image/png"
     },
     {
-      "src": "screenshot-2.png",
+      "src": "mob3.png",
       "sizes": "360x640",
       "type": "image/png"
     },
