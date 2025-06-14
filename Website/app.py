@@ -316,7 +316,7 @@ def submit_data():
 
     try:
         container.create_item(body=dados)
-        return jsonify({"mensagem": "dados guardados!"}), 201
+        return contacto()
     except Exception as e:
         print(e)
         return jsonify({"erro": "Falha ao guardar dados."}), 500
