@@ -194,7 +194,46 @@
             }
         }
 
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
 
+        .switch input { display: none; }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            background-color: #ccc;
+            transition: 0.4s;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            content: "";
+            position: absolute;
+            height: 20px;
+            width: 20px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #007bff;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
         
     </style>
 </head>
@@ -257,12 +296,11 @@
         <form method="post" action="/previsao">
             <div class="form-group">
                 <label>Tem dependentes?</label>
-                <div class="radio-group">
-                    <input type="radio" id="dependentsYes" name="dependents" value="yes" required>
-                    <label for="dependentsYes">Sim</label>
-                    <input type="radio" id="dependentsNo" name="dependents" value="no" required>
-                    <label for="dependentsNo">Não</label>
-                </div>
+                <label class="switch">
+                    <input type="checkbox" id="dependentsSwitch" data-target="dependentsHidden">
+                    <span class="slider"></span>
+                </label>
+                <input type="hidden" name="dependents" id="dependentsHidden" required>
             </div>
 
             <div class="form-group">
@@ -280,23 +318,33 @@
             </div>
 
             <div class="form-group">
-                <label>Possui um serviço de segurança online? <div class="tooltip">&#128161;<span class="tooltiptext">Atributo que descreve se o cliente está subscrito a um serviço adicional de segurança online.</span></div></label>
-                <div class="radio-group">
-                    <input type="radio" id="onlineSecurityYes" name="onlineSecurity" value="yes" required>
-                    <label for="onlineSecurityYes">Sim</label>
-                    <input type="radio" id="onlineSecurityNo" name="onlineSecurity" value="no" required>
-                    <label for="onlineSecurityNo">Não</label>
-                </div>
+                <label class="switch-label">Possui um serviço de segurança online?
+                    <div class="tooltip">&#128161;
+                      <span class="tooltiptext">Atributo que descreve se o cliente está subscrito a um serviço adicional de segurança online.</span>
+                    </div>
+                </label>
+                  
+                <label class="switch">
+                    <input type="checkbox" id="onlineSecuritySwitch" data-target="onlineSecurityHidden">
+                    <span class="slider"></span>
+                </label>
+                
+                <input type="hidden" name="onlineSecurity" id="onlineSecurityHidden" required>
             </div>
 
             <div class="form-group">
-                <label>Possui um serviço de suporte técnico? <div class="tooltip">&#128161;<span class="tooltiptext">Atributo que descreve se o cliente está subscrito a um serviço adicional de suporte adicional de suporte da empresa.</span></div></label>
-                <div class="radio-group">
-                    <input type="radio" id="techSupportYes" name="techSupport" value="yes" required>
-                    <label for="techSupportYes">Sim</label>
-                    <input type="radio" id="techSupportNo" name="techSupport" value="no" required>
-                    <label for="techSupportNo">Não</label>
-                </div>
+                <label>Possui um serviço de suporte técnico? 
+                    <div class="tooltip">&#128161;
+                        <span class="tooltiptext">Atributo que descreve se o cliente está subscrito a um serviço adicional de suporte adicional de suporte da empresa.</span>
+                    </div>
+                </label>
+                
+
+                <label class="switch">
+                    <input type="checkbox" id="techSupportSwitch" data-target="techSupportHidden">
+                    <span class="slider"></span>
+                </label>
+                <input type="hidden" name="techSupport" id="techSupportHidden" required>
             </div>
 
             <div class="form-group">
@@ -310,12 +358,12 @@
 
             <div class="form-group">
                 <label>Faturação eletrónica?</label>
-                <div class="radio-group">
-                    <input type="radio" id="paperlessBillingYes" name="paperlessBilling" value="yes" required>
-                    <label for="paperlessBillingYes">Sim</label>
-                    <input type="radio" id="paperlessBillingNo" name="paperlessBilling" value="no" required>
-                    <label for="paperlessBillingNo">Não</label>
-                </div>
+               
+                <label class="switch">
+                    <input type="checkbox" id="paperlessBillingSwitch" data-target="paperlessBillingHidden">
+                    <span class="slider"></span>
+                </label>
+                <input type="hidden" name="paperlessBilling" id="paperlessBillingHidden" required>
             </div>
 
             <div class="form-group">
@@ -464,6 +512,27 @@
                     tooltip.classList.add('top-edge');
                 }
             }
+        });
+    </script>
+    <script>
+        // Atualiza todos os switches na inicialização e ao interagir
+        function updateSwitchValue(switchInput) {
+          const targetId = switchInput.getAttribute('data-target');
+          const target = document.getElementById(targetId);
+          if (target) {
+            target.value = switchInput.checked ? 'yes' : 'no';
+          }
+        }
+      
+        // Inicialização ao carregar a página
+        window.addEventListener('DOMContentLoaded', function () {
+          const switches = document.querySelectorAll('input[type="checkbox"][data-target]');
+          switches.forEach(sw => {
+            // Valor inicial
+            updateSwitchValue(sw);
+            // Atualizar valor ao mudar
+            sw.addEventListener('change', () => updateSwitchValue(sw));
+          });
         });
     </script>
     
