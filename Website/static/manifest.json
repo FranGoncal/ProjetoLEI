@@ -1,6 +1,6 @@
 {
     "name": "Churn Predictor",
-    "short_name": "ChurnPred",
+    "short_name": "ChurnPredictor",
     "start_url": "/",
     "display": "standalone",
     "background_color": "##2121218",
