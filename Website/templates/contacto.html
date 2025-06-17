@@ -342,7 +342,7 @@
     </header>
 
     <main>
-        <h1>&#128236; Contacto</h1>
+        <h1>Contacto</h1>
 
         <section id="contacto" style="text-align: center; padding: 2rem; font-family: sans-serif;">
             
@@ -416,7 +416,7 @@
 
 
         <form method="post" action="/submit-data" class="highlight-form">
-            Tem alguma experiência que possa partilhar conosco? Contribua para o estudo ao preencher este formulário:
+            Tem alguma experiência que possa partilhar conosco? Contribua para o estudo ao preencher este formulário!
             
             {% with messages = get_flashed_messages() %}
             {% if messages %}
@@ -442,7 +442,7 @@
             
             
             <div class="form-group" style="display: flex; flex-direction: column; margin-bottom: 1rem;">
-                <label for="name" style="margin-bottom: 0.4rem;">Nome:</label>
+                <label for="name" style="margin-bottom: 0.4rem;">Nome</label>
                 <input type="text" id="name" name="name"
                        placeholder="Ex: André Nunes"
                        style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px;"
@@ -450,7 +450,7 @@
               </div>
 
             <div class="form-group">
-                <label for="ccnif" >CC/NIF:</label>
+                <label for="ccnif" >CC/NIF</label>
                 <input type="text" name="ccnif" id="ccnif"
                     minlength="8" maxlength="9"
                     pattern="\d{8,9}"
@@ -469,12 +469,12 @@
             </div>
 
             <div class="form-group">
-                <label for="tenure">Tempo de permanência no serviço (meses): <div class="tooltip">&#128161;<span class="tooltiptext">Tempo decorrido entre o momento inicial que o cliente aderiu ao serviço e o momento do abandono ou momento atual. </span></div></label>
+                <label for="tenure">Tempo de permanência no serviço (meses) <div class="tooltip">&#128161;<span class="tooltiptext">Tempo decorrido entre o momento inicial que o cliente aderiu ao serviço e o momento do abandono ou momento atual. </span></div></label>
                 <input type="number" id="tenure" name="tenure" min="0" required>
             </div>
 
             <div class="form-group">
-                <label for="internetService">Serviço de internet:</label>
+                <label for="internetService">Serviço de internet</label>
                 <select id="internetService" name="internetService" required>
                     <option value="dsl">DSL</option>
                     <option value="fiber_optic">Fibra Óptica</option>
@@ -500,7 +500,7 @@
             <div class="form-group">
                 <label>Possui um serviço de suporte técnico? 
                     <div class="tooltip">&#128161;
-                        <span class="tooltiptext">Atributo que descreve se o cliente está subscrito a um serviço adicional de suporte adicional de suporte da empresa.</span>
+                        <span class="tooltiptext">Atributo que descreve se o cliente está subscrito a um serviço adicional de suporte da empresa.</span>
                     </div>
                 </label>
                 
@@ -513,7 +513,7 @@
             </div>
 
             <div class="form-group">
-                <label for="contract">Tipo de contrato:</label>
+                <label for="contract">Tipo de contrato</label>
                 <select id="contract" name="contract" required>
                     <option value="monthly">Mensal</option>
                     <option value="one_year">1 Ano</option>
@@ -532,7 +532,7 @@
             </div>
 
             <div class="form-group">
-                <label for="paymentMethod">Método de pagamento:</label>
+                <label for="paymentMethod">Método de pagamento</label>
                 <select id="paymentMethod" name="paymentMethod" required>
                     <option value="credit_card">Cartão de Crédito</option>
                     <option value="bank_transfer">Transferência Bancária</option>
@@ -542,7 +542,7 @@
             </div>
 
             <div class="form-group">
-                <label for="monthlyCharges">Mensalidade:</label>
+                <label for="monthlyCharges">Mensalidade($)</label>
                 <input type="number" id="monthlyCharges" name="monthlyCharges" min="0" step="0.01" required>
             </div>
 
