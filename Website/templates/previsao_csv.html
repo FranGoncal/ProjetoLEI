@@ -298,24 +298,25 @@
                     </div>
                     {% endfor %}
                     <script>
-                    window.onload = function () {
+                    window.addEventListener("load", function () {
                         const downloadId = "{{ download_id }}";
                         if (downloadId) {
-                        window.location.href = "/download-csv/" + downloadId;
+                            window.location.href = "/download-csv/" + downloadId;
                         }
 
                         setTimeout(() => {
-                        const flash = document.getElementById('flash-message');
-                        if (flash) {
-                            flash.style.transition = "opacity 0.5s ease-out";
-                            flash.style.opacity = "0";
-                            setTimeout(() => flash.remove(), 500);
-                        }
+                            const flash = document.getElementById('flash-message');
+                            if (flash) {
+                                flash.style.transition = "opacity 0.5s ease-out";
+                                flash.style.opacity = "0";
+                                setTimeout(() => flash.remove(), 500);
+                            }
                         }, 6500);
-                    };
+                    });
                     </script>
                 {% endif %}
             {% endwith %}
+
 
 
 

@@ -54,13 +54,13 @@ COSMOS_KEY = os.getenv("COSMOS_KEY")
 DATABASE_NAME = "databaseFran"
 CONTAINER_NAME = "dados"
 
-'''client = CosmosClient(COSMOS_ENDPOINT, COSMOS_KEY)
+client = CosmosClient(COSMOS_ENDPOINT, COSMOS_KEY)
 database = client.create_database_if_not_exists(id=DATABASE_NAME)
 container = database.create_container_if_not_exists(
     id=CONTAINER_NAME,
     partition_key=PartitionKey(path="/nome"),
     offer_throughput=400
-)'''
+)
 
 @app.route("/")
 def home():
@@ -80,7 +80,7 @@ def preverCsv():
 @app.route("/previsao-csv", methods=["POST"])
 def previsaoCsv():
     ### Captcha ###
-    captcha_response = request.form.get('g-recaptcha-response')
+    '''captcha_response = request.form.get('g-recaptcha-response')
     load_dotenv()
     secret = os.environ.get('RECAPTCHA_SECRET')
     verify_url = 'https://www.google.com/recaptcha/api/siteverify'
@@ -90,7 +90,7 @@ def previsaoCsv():
 
     if not result.get('success', False):
         flash("Falha na verificação do CAPTCHA. Tente novamente.", "error")
-        return redirect(url_for('preverCsv'))
+        return redirect(url_for('preverCsv'))'''
     
     
     if "csvfile" not in request.files:
