@@ -283,6 +283,11 @@
             border-left: 6px solid #ff0000;
             border-radius: 5px;
         }
+        .alert.success {
+            background-color: #c5c5c5;
+            color: #004e11;
+            border-left: 6px solid #019622;
+        }
     </style>
 </head>
 <body>
@@ -314,8 +319,8 @@
                     <li><a href="/">Home</a></li>
                     <li><a href="/prever">Previsão Individual</a></li>
                     <li><a href="/prever-csv">Previsão em Lote (.CSV)</a></li>
-                    <li><a href="/contribuir">Contribuir</a></li>
-                    <li><a href="#" class="active">Contacto</a></li>
+                    <li><a href="#" class="active">Contribuir</a></li>
+                    <li><a href="/contacto">Contacto</a></li>
                     <li><a href="/sobre">Sobre</a></li>
                 </ul>
             </nav>
@@ -335,8 +340,8 @@
                             <a href="/prever-csv">Previsão em Lote (.CSV)</a>
                         </div>
                     </li>
-                    <li><a href="/contribuir">Contribuir</a></li>
-                    <li><a href="#" class="active">Contacto</a></li>
+                    <li><a href="#" class="active">Contribuir</a></li>
+                    <li><a href="/contacto">Contacto</a></li>
                     <li><a href="/sobre">Sobre</a></li>
                 </ul>
             </nav>
@@ -344,79 +349,160 @@
     </header>
 
     <main>
-        <h1>Contacto</h1>
-
-        <section id="contacto" style="text-align: center; padding: 2rem; font-family: sans-serif;">
-            
-            <p>Em caso de dúvidas ou sugestões de melhorias, entre em contato com Francisco Gonçalves, responsável pelo desenvolvimento desta aplicação web, através do LinkedIn ou e-mail.</p>
-            <p style="margin-bottom: 2rem;">Este projeto foi desenvolvido num repositório público no GitHub e está aberto a contribuições via fork.</p>
-
-            <!-- Container com ícones alinhados -->
-            <div style="display: flex; justify-content: center; gap: 40px; align-items: center;">
-          
-              <!-- GitHub -->
-              <a href="https://github.com/FranGoncal/ProjetoLEI" target="_blank" title="GitHub"
-                 style="color: inherit; text-decoration: none;">
-                <div id="github" style="transition: transform 0.2s;">
-                  <i data-lucide="github" class="social-icon"></i>
-                </div>
-              </a>
-          
-              <!-- LinkedIn -->
-              <a href="https://www.linkedin.com/in/francisco-goncalves-link" target="_blank" title="LinkedIn"
-                 style="color: inherit; text-decoration: none;">
-                <div id="linkedin" style="transition: transform 0.2s;">
-                  <i data-lucide="linkedin" class="social-icon"></i>
-                </div>
-              </a>
-          
-              <!-- Email + tooltip, tudo dentro do botão -->
-              <button onclick="copyEmail()" title="Copiar Email"
-                      style="position: relative; margin-top: 0px; background: none; border: none; cursor: pointer; color: inherit; transition: transform 0.2s;">
-                <div id="email-icon">
-                  <i data-lucide="mail" class="social-icon"></i>
-                </div>
-                <!-- Tooltip aparece por cima -->
-                <div id="copy-msg" style="
-                  position: absolute;
-                  top: -30px;
-                  left: 50%;
-                  transform: translateX(-50%);
-                  background: #222;
-                  color: #fff;
-                  padding: 4px 8px;
-                  font-size: 0.75rem;
-                  border-radius: 4px;
-                  display: none;
-                  white-space: nowrap;
-                ">📋 Email copiado!</div>
-              </button>
-            </div>
-          </section>
-          
-          <script>
-            lucide.createIcons();
-          
-            function copyEmail() {
-              const email = "gfrancisco@ipcbcampus.pt";
-              navigator.clipboard.writeText(email).then(() => {
-                const msg = document.getElementById("copy-msg");
-                msg.style.display = "block";
-                setTimeout(() => (msg.style.display = "none"), 2500);
-              });
-            }
-          
-            // Hover animation
-            const icons = ["github", "linkedin", "email-icon"];
-            icons.forEach(id => {
-              const el = document.getElementById(id);
-              el.addEventListener("mouseover", () => el.style.transform = "scale(1.2)");
-              el.addEventListener("mouseout", () => el.style.transform = "scale(1)");
-            });
-          </script>
+        <h1>Contribuir</h1>
         
+        <form method="post" action="/submit-data" class="highlight-form">
+            Tem alguma experiência que possa partilhar conosco? Contribua para o estudo ao preencher este formulário!
+            
+            {% with messages = get_flashed_messages(with_categories=True) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div id="flash-message" class="alert {{ category }}">
+                            <p>{{ message }}</p>
+                        </div>
+                    {% endfor %}
 
-        <a href="/"><button>Página Inicial</button>
+                    <script>
+                    setTimeout(function() {
+                        const flash = document.getElementById('flash-message');
+                        if (flash) {
+                            flash.style.transition = "opacity 0.5s ease-out";
+                            flash.style.opacity = "0";
+                            setTimeout(() => flash.remove(), 500);
+                        }
+                    }, 6500);
+                    </script>
+                {% endif %}
+            {% endwith %}
+
+            
+            
+            <div class="form-group" style="display: flex; flex-direction: column; margin-bottom: 1rem;">
+                <label for="name" style="margin-bottom: 0.4rem;">Nome</label>
+                <input type="text" id="name" name="name"
+                       placeholder="Ex: André Nunes"
+                       style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px;"
+                       required>
+              </div>
+
+            <div class="form-group">
+                <label for="ccnif" >CC/NIF</label>
+                <input type="text" name="ccnif" id="ccnif"
+                    minlength="8" maxlength="9"
+                    pattern="\d{8,9}"
+                    title="Introduz 8 ou 9 dígitos"
+                    style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px;"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label>Tem dependentes?</label>
+                <label class="switch">
+                    <input type="checkbox" id="dependentsSwitch" data-target="dependentsHidden">
+                    <span class="slider"></span>
+                </label>
+                <input type="hidden" name="dependents" id="dependentsHidden" required>
+            </div>
+
+            <div class="form-group">
+                <label for="tenure">Tempo de permanência no serviço (meses) <div class="tooltip">&#128161;<span class="tooltiptext">Tempo decorrido entre o momento inicial que o cliente aderiu ao serviço e o momento do abandono ou momento atual. </span></div></label>
+                <input type="number" id="tenure" name="tenure" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label for="internetService">Serviço de internet</label>
+                <select id="internetService" name="internetService" required>
+                    <option value="dsl">DSL</option>
+                    <option value="fiber_optic">Fibra Óptica</option>
+                    <option value="none">Nenhum</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="switch-label">Possui um serviço de segurança online?
+                    <div class="tooltip">&#128161;
+                      <span class="tooltiptext">Atributo que descreve se o cliente está subscrito a um serviço adicional de segurança online.</span>
+                    </div>
+                </label>
+                  
+                <label class="switch">
+                    <input type="checkbox" id="onlineSecuritySwitch" data-target="onlineSecurityHidden">
+                    <span class="slider"></span>
+                </label>
+                
+                <input type="hidden" name="onlineSecurity" id="onlineSecurityHidden" required>
+            </div>
+
+            <div class="form-group">
+                <label>Possui um serviço de suporte técnico? 
+                    <div class="tooltip">&#128161;
+                        <span class="tooltiptext">Atributo que descreve se o cliente está subscrito a um serviço adicional de suporte da empresa.</span>
+                    </div>
+                </label>
+                
+
+                <label class="switch">
+                    <input type="checkbox" id="techSupportSwitch" data-target="techSupportHidden">
+                    <span class="slider"></span>
+                </label>
+                <input type="hidden" name="techSupport" id="techSupportHidden" required>
+            </div>
+
+            <div class="form-group">
+                <label for="contract">Tipo de contrato</label>
+                <select id="contract" name="contract" required>
+                    <option value="monthly">Mensal</option>
+                    <option value="one_year">1 Ano</option>
+                    <option value="two_year">2 Anos</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Faturação eletrónica?</label>
+               
+                <label class="switch">
+                    <input type="checkbox" id="paperlessBillingSwitch" data-target="paperlessBillingHidden">
+                    <span class="slider"></span>
+                </label>
+                <input type="hidden" name="paperlessBilling" id="paperlessBillingHidden" required>
+            </div>
+
+            <div class="form-group">
+                <label for="paymentMethod">Método de pagamento</label>
+                <select id="paymentMethod" name="paymentMethod" required>
+                    <option value="credit_card">Cartão de Crédito</option>
+                    <option value="bank_transfer">Transferência Bancária</option>
+                    <option value="electronic_check">Cheque Enviado Eletronicamente</option>
+                    <option value="mailed_check">Cheque por Correio</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="monthlyCharges">Mensalidade($)</label>
+                <input type="number" id="monthlyCharges" name="monthlyCharges" min="0" step="0.01" required>
+            </div>
+
+            <div class="form-group">
+                <label>Abandonou o serviço?</label>
+
+                <label class="switch">
+                    <input type="checkbox" id="churngSwitch" data-target="churnHidden">
+                    <span class="slider"></span>
+                </label>
+                <input type="hidden" name="churn" id="churnHidden" required>
+            </div>
+
+
+            <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+            <center><div class="g-recaptcha" data-sitekey="6Lco1lorAAAAAB2-0iLRoPbLDFT6_SAEZLmyV57V"></div></center>
+            
+
+            <button type="submit">Submeter</button>
+        </form>
+
+
+
+        <!---<a href="/"><button>Página Inicial</button></a>--->
     </main>
 
     <script>
