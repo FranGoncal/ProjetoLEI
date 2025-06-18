@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_file, redirect, url_for, flash, jsonify
+from flask import Flask, render_template, request, send_file, redirect, url_for, flash, jsonify, session
 import pandas as pd
 from azure.cosmos import CosmosClient, PartitionKey
 import pickle
@@ -54,13 +54,13 @@ COSMOS_KEY = os.getenv("COSMOS_KEY")
 DATABASE_NAME = "databaseFran"
 CONTAINER_NAME = "dados"
 
-client = CosmosClient(COSMOS_ENDPOINT, COSMOS_KEY)
+'''client = CosmosClient(COSMOS_ENDPOINT, COSMOS_KEY)
 database = client.create_database_if_not_exists(id=DATABASE_NAME)
 container = database.create_container_if_not_exists(
     id=CONTAINER_NAME,
     partition_key=PartitionKey(path="/nome"),
     offer_throughput=400
-)
+)'''
 
 @app.route("/")
 def home():
@@ -89,7 +89,7 @@ def previsaoCsv():
     result = r.json()
 
     if not result.get('success', False):
-        flash("Falha na verificação do CAPTCHA. Tente novamente.")
+        flash("Falha na verificação do CAPTCHA. Tente novamente.", "error")
         return redirect(url_for('preverCsv'))
     
     
@@ -120,9 +120,15 @@ def previsaoCsv():
 
     #fazer previsão
     loaded_model=loaded_models[modelo_escolhido]
+    
     X = preprocess_data(df)
 
-    y_pred = loaded_model.predict(X)
+    try:
+        y_pred = loaded_model.predict(X)
+    except Exception as e:
+        flash("Erro ao processar o ficheiro CSV. Consulte o template disponivel nesta página.", "error")
+        return redirect(url_for('preverCsv'))
+    
     df["churn"] = y_pred
 
     # Cria buffer para guardar CSV em memória
@@ -130,10 +136,28 @@ def previsaoCsv():
     df.to_csv(output, index=False)
     output.seek(0)
 
-    # Envia CSV como ficheiro para download
+    download_id = str(uuid4())
+    session[f"csv_{download_id}"] = output.getvalue()
+
+    # Flash e redireciona para página de resultado com o ID
+    flash("Previsão feita, o resultado será descarregado automaticamente.", "success")
+    return redirect(url_for('resultadoCsv', download_id=download_id))
+
+@app.route("/resultado-csv")
+def resultadoCsv():
+    return render_template("previsao_csv.html", download_id=request.args.get("download_id"))
+
+
+@app.route("/download-csv/<download_id>")
+def downloadCsv(download_id):
+    csv_data = session.get(f"csv_{download_id}")
+    if not csv_data:
+        return "Arquivo expirado ou inválido", 404
+
+    output = io.BytesIO(csv_data)
     return send_file(
         output,
-        mimetype='text/csv',
+        mimetype="text/csv",
         as_attachment=True,
         download_name="resultado_previsao.csv"
     )
@@ -238,26 +262,6 @@ def previsao():
     #z=X
     return render_template("previsao_resultado.html", res=res_label, probabilidade=probabilidade, img_data=img_str)
 
-'''
-@app.route('/lime_explanation', methods=['POST'])
-def lime_explanation():
-    #image_path = 'static\icon_web_1.png'
-    #return send_file(image_path, mimetype='image/png')
-    print("Z =====> "+str(z))
-
-
-    fig = exp.as_pyplot_figure()
-    prediction = loaded_model.predict(z)[0]
-    plt.title(f"Explicação LIME para a predição: {'Churn' if prediction == 1 else 'No Churn'}")
-
-    # Salvar a figura em um buffer de bytes
-    img_buffer = io.BytesIO()
-    plt.savefig(img_buffer, format='png')
-    img_buffer.seek(0)
-
-    # Retornar a imagem
-    return send_file(img_buffer, mimetype='image/png')
-'''
 
 @app.route("/contacto")
 def contacto():
@@ -267,6 +271,9 @@ def contacto():
 def sobre():
     return render_template("sobre.html")
 
+@app.route("/contribuir")
+def contribuir():
+    return render_template("contribuir.html")
 
 from flask import send_from_directory
 @app.route('/service-worker.js')
@@ -276,7 +283,6 @@ def service_worker():
 @app.route('/manifest.json')
 def manifest():
     return send_from_directory('static', 'manifest.json')
-
 
 
 
@@ -293,8 +299,8 @@ def submit_data():
     result = r.json()
 
     if not result.get('success', False):
-        flash("Falha na verificação do CAPTCHA. Tente novamente.")
-        return redirect(url_for('contacto'))
+        flash("Falha na verificação do CAPTCHA. Tente novamente.", "error")
+        return redirect(url_for('contribuir'))
 
     ### CosmosBD ###
     data = request.form
@@ -316,7 +322,8 @@ def submit_data():
 
     try:
         container.create_item(body=dados)
-        return redirect(url_for('contacto'))
+        flash("Informação Submetida. Obrigado pela sua contribuição!", "success")
+        return redirect(url_for('contribuir'))
     except Exception as e:
         print(e)
         return jsonify({"erro": "Falha ao guardar dados."}), 500

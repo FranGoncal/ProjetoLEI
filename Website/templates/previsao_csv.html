@@ -151,6 +151,11 @@
             border-left: 6px solid #ff0000;
             border-radius: 5px;
         }
+        .alert.success {
+            background-color: #c5c5c5;
+            color: #004e11;
+            border-left: 6px solid #019622;
+        }
         /* For mobile specifically */
         @media (max-width: 768px) {
             main {
@@ -215,6 +220,7 @@
                     <li><a href="/">Home</a></li>
                     <li><a href="/prever">Previsão Individual</a></li>
                     <li><a href="/prever-csv" class="active">Previsão em Lote (.CSV)</a></li>
+                    <li><a href="/contribuir">Contribuir</a></li>
                     <li><a href="/contacto">Contacto</a></li>
                     <li><a href="/sobre">Sobre</a></li>
                 </ul>
@@ -233,6 +239,7 @@
                             <a href="/prever-csv">Previsão em Lote (.CSV)</a>
                         </div>
                     </li>
+                    <li><a href="/contribuir">Contribuir</a></li>
                     <li><a href="/contacto">Contacto</a></li>
                     <li><a href="/sobre">Sobre</a></li>
                 </ul>
@@ -283,27 +290,33 @@
                 
             <script src="https://www.google.com/recaptcha/api.js" async defer></script>
             <center><div class="g-recaptcha" data-sitekey="6Lco1lorAAAAAB2-0iLRoPbLDFT6_SAEZLmyV57V"></div></center>
-            {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <div id="flash-message" class="alert">
-                {% for message in messages %}
-                    <p>{{ message }}</p>
-                {% endfor %}
-                </div>
+            {% with messages = get_flashed_messages(with_categories=True) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                    <div id="flash-message" class="alert {{ category }}">
+                        <p>{{ message }}</p>
+                    </div>
+                    {% endfor %}
+                    <script>
+                    window.onload = function () {
+                        const downloadId = "{{ download_id }}";
+                        if (downloadId) {
+                        window.location.href = "/download-csv/" + downloadId;
+                        }
 
-                <script>
-                // Aguarda 5 segundos e remove a mensagem
-                setTimeout(function() {
-                    const flash = document.getElementById('flash-message');
-                    if (flash) {
-                    flash.style.transition = "opacity 0.5s ease-out";
-                    flash.style.opacity = "0";
-                    setTimeout(() => flash.remove(), 500); // remove após o fade
-                    }
-                }, 5000); // 5000 milissegundos = 5 segundos
-                </script>
-            {% endif %}
+                        setTimeout(() => {
+                        const flash = document.getElementById('flash-message');
+                        if (flash) {
+                            flash.style.transition = "opacity 0.5s ease-out";
+                            flash.style.opacity = "0";
+                            setTimeout(() => flash.remove(), 500);
+                        }
+                        }, 6500);
+                    };
+                    </script>
+                {% endif %}
             {% endwith %}
+
 
 
 
