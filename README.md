@@ -1,3 +1,8 @@
+<p align="center">
+  <img src="Website/static/icon_web_white.png" alt="Gráfico de churn" width="500"/>
+</p>
+
+
 # Descrição do Projeto:
 
   No âmbito da unidade curricular de Projeto I, estão disponíveis os ficheiros .ipynb utilizados durante o desenvolvimento do projeto e os datasets selecionados.
