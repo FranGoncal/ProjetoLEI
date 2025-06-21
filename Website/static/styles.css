@@ -338,5 +338,48 @@ main {
     main {
         margin-top: 12vh;
     }
+    
 }
 
+.select-custom {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    height: 40px;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fff;
+    font-size: 16px;
+    width: 100%;
+    color: #0c0c0c;
+}
+option {
+    color: #0c0c0c;
+}
+@media (prefers-color-scheme: dark) {
+    .select-custom {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        height: 40px;
+        padding: 8px 12px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        background-color: #4d4d4d;
+        font-size: 16px;
+        width: 100%;
+        color: #d1c4c4;
+    }
+    option {
+        color: #d1c4c4;
+    }
+    
+}
+
+
+
+.select-custom:focus {
+    border-color: #007aff;
+    outline: none;
+}
