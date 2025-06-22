@@ -53,7 +53,7 @@ COSMOS_ENDPOINT = "https://accfran.documents.azure.com:443/"
 COSMOS_KEY = os.getenv("COSMOS_KEY")
 DATABASE_NAME = "databaseFran"
 CONTAINER_NAME = "dados"
-'''
+
 
 client = CosmosClient(COSMOS_ENDPOINT, COSMOS_KEY)
 database = client.create_database_if_not_exists(id=DATABASE_NAME)
@@ -61,7 +61,7 @@ container = database.create_container_if_not_exists(
     id=CONTAINER_NAME,
     partition_key=PartitionKey(path="/nome"),
     offer_throughput=400
-)'''
+)
 
 @app.route("/")
 def home():
@@ -294,7 +294,7 @@ def manifest():
 @app.route('/submit-data', methods=['POST'])
 def submit_data():
     ### Captcha ###
-    captcha_response = request.form.get('g-recaptcha-response')
+    '''captcha_response = request.form.get('g-recaptcha-response')
     load_dotenv()
     secret = os.environ.get('RECAPTCHA_SECRET')
     verify_url = 'https://www.google.com/recaptcha/api/siteverify'
@@ -304,7 +304,7 @@ def submit_data():
 
     if not result.get('success', False):
         flash("Falha na verificação do CAPTCHA. Tente novamente.", "error")
-        return redirect(url_for('contribuir'))
+        return redirect(url_for('contribuir'))'''
 
     ### CosmosBD ###
     data = request.form
@@ -321,12 +321,18 @@ def submit_data():
         'paperlessBilling': data.get('paperlessBilling'),
         'paymentMethod': data.get('paymentMethod'),
         'monthlyCharges': data.get('monthlyCharges'),
-        'churn': data.get('churn')
+        'churn': data.get('churn'),
+        'motivo': data.get('motivo',''),
+        'contramedida': data.get('contramedida',''),
+        'pais': data.get('pais',''),
     }
+    
+    if dados.get('churn') == "no":
+        for key in ['motivo', 'contramedida', 'pais']:
+            dados.pop(key, None)
 
     try:
         container.create_item(body=dados)
-
         flash("Informação Submetida. Obrigado pela sua contribuição!", "success")
         return redirect(url_for('contribuir'))
     except Exception as e:

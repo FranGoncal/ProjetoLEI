@@ -105,7 +105,7 @@
             text-align: left;
             width: 100%;
         }
-        input[type="radio"], input[type="number"], select {
+        input[type="radio"], input[type="number"], select, textarea {
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
@@ -383,7 +383,7 @@
                        placeholder="Ex: André Nunes"
                        style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px;"
                        required>
-              </div>
+            </div>
 
             <div class="form-group">
                 <label for="ccnif" >CC/NIF</label>
@@ -484,13 +484,38 @@
 
             <div class="form-group">
                 <label>Abandonou o serviço?</label>
-
+            
                 <label class="switch">
                     <input type="checkbox" id="churngSwitch" data-target="churnHidden">
                     <span class="slider"></span>
                 </label>
                 <input type="hidden" name="churn" id="churnHidden" required>
             </div>
+            
+
+            <!--Opcional-->
+            <div id="motivoContainer" style="display: none; flex-direction: column; margin-bottom: 1rem;">
+                <label for="motivo" style="margin-bottom: 0.4rem;">Motivo da saída? (Opcional)</label>
+                <textarea id="motivo" name="motivo"
+                          placeholder="Escreva aqui o seu motivo..."
+                          style="min-height: 100px;"></textarea>
+            </div>
+
+            <div id="contramedidaContainer" style="display: none; flex-direction: column; margin-bottom: 1rem;">
+                <label for="contramedida" style="margin-bottom: 0.4rem;">O que poderia ter evitado a sua sáida do serviço? (Opcional)</label>
+                <textarea id="contramedida" name="contramedida"
+                          placeholder="Escreva aqui a sua prespectiva..."
+                          style="min-height: 100px;"></textarea>
+            </div>
+            <div class="form-group" id="localContainer" style="display: none; flex-direction: column; margin-bottom: 1rem;">
+                <label for="pais" style="margin-bottom: 0.4rem;">País (Opcional)</label>
+                <input type="text" id="pais" name="pais"
+                       placeholder="Ex: Portugal"
+                       style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px;"
+                       >
+            </div>
+            <!--/Opcional-->
+              
 
 
             <script src="https://www.google.com/recaptcha/api.js" async defer></script>
@@ -639,6 +664,30 @@
                 }
             }
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const switchInput = document.getElementById('churngSwitch');
+            const hiddenInput = document.getElementById('churnHidden');
+
+            const motivoContainer = document.getElementById('motivoContainer');
+            const contramedidaContainer = document.getElementById('contramedidaContainer');
+            const localContainer = document.getElementById('localContainer');
+
+            switchInput.addEventListener('change', function() {
+                if (this.checked) {
+                    hiddenInput.value = "Yes";
+                    motivoContainer.style.display = "flex";
+                    contramedidaContainer.style.display = "flex";
+                    localContainer.style.display = "flex";
+                } else {
+                    hiddenInput.value = "";
+                    motivoContainer.style.display = "none";
+                    contramedidaContainer.style.display = "none";
+                    localContainer.style.display = "none";
+                }
+            });
+        });
+
     </script>
     
 
