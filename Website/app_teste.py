@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_file, redirect, url_for, flash, jsonify
+from flask import Flask, render_template, request, send_file, redirect, url_for, flash, jsonify, session
 import pandas as pd
 from azure.cosmos import CosmosClient, PartitionKey
 import pickle
@@ -108,8 +108,8 @@ def previsaoCsv():
     # Lê o CSV usando pandas
     try:
         df = pd.read_csv(ficheiro)
-        print("CSV Recebido:")
-        print(df.head())  # Mostra as primeiras linhas do DataFrame no terminal
+        #print("CSV Recebido:")
+        #print(df.head())  # Mostra as primeiras linhas do DataFrame no terminal
     except Exception as e:
         print("Erro ao ler CSV:", e)
         return "Erro ao processar o ficheiro CSV", 500
@@ -120,10 +120,24 @@ def previsaoCsv():
     
 
     #fazer previsão
+
+    
+    #Validar se modelo existe
+    if modelo_escolhido not in list(loaded_models.keys()):
+        return f"Modelo desconhecido: {modelo_escolhido}", 400    
     loaded_model=loaded_models[modelo_escolhido]
+
+
+
     X = preprocess_data(df)
 
-    y_pred = loaded_model.predict(X)
+
+    try:
+        y_pred = loaded_model.predict(X)
+    except Exception as e:
+        flash("Erro ao processar o ficheiro CSV. Consulte o template disponivel nesta página.", "error")
+        return redirect(url_for('preverCsv'))
+    
     df["churn"] = y_pred
 
     # Cria buffer para guardar CSV em memória
@@ -131,10 +145,28 @@ def previsaoCsv():
     df.to_csv(output, index=False)
     output.seek(0)
 
-    # Envia CSV como ficheiro para download
+    download_id = str(uuid4())
+    session[f"csv_{download_id}"] = output.getvalue()
+
+    # Flash e redireciona para página de resultado com o ID
+    flash("Previsão feita, o resultado será descarregado automaticamente.", "success")
+    return redirect(url_for('resultadoCsv', download_id=download_id))
+
+@app.route("/resultado-csv")
+def resultadoCsv():
+    return render_template("previsao_csv.html", download_id=request.args.get("download_id"))
+
+
+@app.route("/download-csv/<download_id>")
+def downloadCsv(download_id):
+    csv_data = session.get(f"csv_{download_id}")
+    if not csv_data:
+        return "Arquivo expirado ou inválido", 404
+
+    output = io.BytesIO(csv_data)
     return send_file(
         output,
-        mimetype='text/csv',
+        mimetype="text/csv",
         as_attachment=True,
         download_name="resultado_previsao.csv"
     )
@@ -208,7 +240,7 @@ def previsao():
     res = loaded_model.predict(X)
     proba = loaded_model.predict_proba(X)
     probabilidade = round(proba[0][res[0]] * 100, 2)  
-    print("A previsão foi :"+ str(res)+ " com probabilidade de -> "+str(proba))
+    #print("A previsão foi :"+ str(res)+ " com probabilidade de -> "+str(proba))
 
 
     #Mandar os resultados da previsao para o frotend
@@ -248,6 +280,9 @@ def contacto():
 def sobre():
     return render_template("sobre.html")
 
+@app.route("/contribuir")
+def contribuir():
+    return render_template("contribuir.html")
 
 from flask import send_from_directory
 @app.route('/service-worker.js')
@@ -298,7 +333,8 @@ def submit_data():
     try:
         #Nao e necessaria criacao do item no CosmosDB em teste
         #container.create_item(body=dados)
-        return jsonify({"mensagem": "dados guardados!"}), 201
+        flash("Informação Submetida. Obrigado pela sua contribuição!", "success")
+        return redirect(url_for('contribuir'))
     except Exception as e:
         print(e)
         return jsonify({"erro": "Falha ao guardar dados."}), 500

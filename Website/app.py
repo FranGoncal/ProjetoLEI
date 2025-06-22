@@ -54,6 +54,7 @@ COSMOS_KEY = os.getenv("COSMOS_KEY")
 DATABASE_NAME = "databaseFran"
 CONTAINER_NAME = "dados"
 '''
+
 client = CosmosClient(COSMOS_ENDPOINT, COSMOS_KEY)
 database = client.create_database_if_not_exists(id=DATABASE_NAME)
 container = database.create_container_if_not_exists(
@@ -119,6 +120,8 @@ def previsaoCsv():
     
 
     #fazer previsão
+    if modelo_escolhido not in list(loaded_models.keys()):
+        return f"Modelo desconhecido: {modelo_escolhido}", 400    
     loaded_model=loaded_models[modelo_escolhido]
     
     X = preprocess_data(df)
@@ -287,6 +290,7 @@ def manifest():
 
 
 
+
 @app.route('/submit-data', methods=['POST'])
 def submit_data():
     ### Captcha ###
@@ -322,6 +326,7 @@ def submit_data():
 
     try:
         container.create_item(body=dados)
+
         flash("Informação Submetida. Obrigado pela sua contribuição!", "success")
         return redirect(url_for('contribuir'))
     except Exception as e:

@@ -3,8 +3,8 @@
     "short_name": "ChurnPredictor",
     "start_url": "/",
     "display": "standalone",
-    "background_color": "#2121218",
-    "theme_color": "#2121218",
+    "theme_color": "#212121",
+    "background_color": "#212121",
     "icons": [
       {
         "src": "so_icon_web2.png",
