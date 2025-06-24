@@ -1,4 +1,5 @@
 
+
 import unittest
 from app_teste import app
 import io
@@ -45,9 +46,7 @@ class PrevisaoCsvTestCase(unittest.TestCase):
         }
 
         response = self.app.post('/previsao-csv', data=data, content_type='multipart/form-data')
-        # Como pandas falha ao ler CSV vazio, retorna 500
-        self.assertEqual(response.status_code, 500)
-        self.assertIn("Erro ao processar o ficheiro CSV", response.data.decode('utf-8'))
+        self.assertEqual(response.status_code, 302)
 
     def test_previsao_csv_model_not_found(self):
         # Tentar usar modelo inexistente

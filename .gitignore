@@ -6,6 +6,10 @@
 
 /Website/.env
 /Website/__pycache__/
+/Website/.pytest_cache/
+
+/Website/testesFuncionais/__pycache__/
+/Website/testesFuncionais/.pytest_cache/
 
 dockerfileComands.txt
 

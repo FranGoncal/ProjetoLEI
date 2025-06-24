@@ -81,7 +81,7 @@ def preverCsv():
 @app.route("/previsao-csv", methods=["POST"])
 def previsaoCsv():
     ### Captcha ###
-    '''captcha_response = request.form.get('g-recaptcha-response')
+    captcha_response = request.form.get('g-recaptcha-response')
     load_dotenv()
     secret = os.environ.get('RECAPTCHA_SECRET')
     verify_url = 'https://www.google.com/recaptcha/api/siteverify'
@@ -91,7 +91,7 @@ def previsaoCsv():
 
     if not result.get('success', False):
         flash("Falha na verificação do CAPTCHA. Tente novamente.", "error")
-        return redirect(url_for('preverCsv'))'''
+        return redirect(url_for('preverCsv'))
     
     
     if "csvfile" not in request.files:
@@ -111,8 +111,8 @@ def previsaoCsv():
         print("CSV Recebido:")
         print(df.head())  # Mostra as primeiras linhas do DataFrame no terminal
     except Exception as e:
-        print("Erro ao ler CSV:", e)
-        return "Erro ao processar o ficheiro CSV", 500
+        flash("Erro ao processar o ficheiro CSV. Consulte o template disponivel nesta página.", "error")
+        return redirect(url_for('preverCsv'))
     
     
 
@@ -294,7 +294,7 @@ def manifest():
 @app.route('/submit-data', methods=['POST'])
 def submit_data():
     ### Captcha ###
-    '''captcha_response = request.form.get('g-recaptcha-response')
+    captcha_response = request.form.get('g-recaptcha-response')
     load_dotenv()
     secret = os.environ.get('RECAPTCHA_SECRET')
     verify_url = 'https://www.google.com/recaptcha/api/siteverify'
@@ -304,7 +304,7 @@ def submit_data():
 
     if not result.get('success', False):
         flash("Falha na verificação do CAPTCHA. Tente novamente.", "error")
-        return redirect(url_for('contribuir'))'''
+        return redirect(url_for('contribuir'))
 
     ### CosmosBD ###
     data = request.form

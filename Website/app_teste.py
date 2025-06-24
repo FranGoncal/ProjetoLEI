@@ -111,8 +111,8 @@ def previsaoCsv():
         #print("CSV Recebido:")
         #print(df.head())  # Mostra as primeiras linhas do DataFrame no terminal
     except Exception as e:
-        print("Erro ao ler CSV:", e)
-        return "Erro ao processar o ficheiro CSV", 500
+        flash("Erro ao processar o ficheiro CSV. Consulte o template disponivel nesta página.", "error")
+        return redirect(url_for('preverCsv'))
     
     
 
