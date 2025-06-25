@@ -5,8 +5,10 @@
 
 # Descrição do Projeto:
 
-  No âmbito da unidade curricular de Projeto I, estão disponíveis os ficheiros .ipynb utilizados durante o desenvolvimento do projeto e os datasets selecionados.
+  No âmbito da unidade curricular de Projeto II, estão disponíveis os ficheiros .ipynb utilizados durante o desenvolvimento do projeto, os datasets selecionados e todos os ficheiros relacionados com o desenvolvimento da aplicação web e PWA dentro da pasta /Website.
   Este projeto foi desenvolvido com o intuito de criar um modelo de previsão de abandono de um serviço (customer churn) de telecomunicações utilizando algoritmos de Machine Learning.
+  Sendo este conceito, posto em demonstração de forma acessivel, a partir da aplicação web e PWA criadas.
+  A aplicação está disponivel a partir da seguinte hiperligação: *site*
 
 # Estrutura do Repositório:
 
