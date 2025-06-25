@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="Website/static/icon_web_white.png" alt="Gráfico de churn" width="500"/>
+  <img src="/static/icon_web_white.png" alt="Gráfico de churn" width="500"/>
 </p>
 
 
