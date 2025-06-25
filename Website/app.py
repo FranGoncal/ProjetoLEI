@@ -69,9 +69,6 @@ def home():
 
 @app.route("/prever")
 def prever():
-    #res = loaded_model.predict(X)
-    #print("A previsão foi :"+ str(res))
-    
     return render_template("previsao.html")
 
 @app.route("/prever-csv")
