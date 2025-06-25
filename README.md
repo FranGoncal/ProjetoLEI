@@ -12,7 +12,8 @@
 
 # Estrutura do Repositório:
 
-  - /data : Esta pasta contem os datasets utilizados.
+  - /Website : Esta pasta contém todos os ficheiros relacionados com a implementação da aplicação web e PWA.
+  - /data : Esta pasta contém os datasets utilizados.
   - ibm_only.ipynb : Ficheiro que contem todo o código, gráficos e resultados apresentados no relatório do projeto nos capítulos 5 e 6 relativamente ao dataset da IBM.
   - kaggle_only.ipynb : Ficheiro que contem todo o código, gráficos e resultados apresentados no relatório do projeto nos capítulos 5 e 6 relativamente ao dataset do Kaggle.
   - validacao_independente.ipynb : Ficheiro que contem todo o código e resultados apresentados no relatório do projeto no capítulo 7.
