@@ -2,9 +2,7 @@ from flask import Flask, render_template, request, send_file, redirect, url_for,
 import pandas as pd
 from azure.cosmos import CosmosClient, PartitionKey
 import pickle
-import numpy as np
 import joblib
-from io import BytesIO
 import dill
 import io
 import matplotlib.pyplot as plt
@@ -12,9 +10,11 @@ import requests
 import os
 from dotenv import load_dotenv
 from uuid import uuid4
+from flask import send_from_directory
 
 loaded_models = {}
 
+#Carregar modelos
 with open('models/model.pkl', 'rb') as file:
     loaded_models['xgboost'] = pickle.load(file)
 
@@ -33,20 +33,17 @@ with open('models/RF_model.pkl', 'rb') as file:
 with open('models/SVM_model.pkl', 'rb') as file:
     loaded_models['svm'] = pickle.load(file)
 
+#Carregar explainer
 with open('explainers/lime_explainer.pkl', 'rb') as f:
     explainer = dill.load(f)
 
+#Carregar scaler
 scaler = joblib.load('scalers/scaler.pkl')
-#tipo_do_modelo = type(loaded_model).__name__
 
-#X = [1.23672422, -0.28621769, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0 ,1 ,1 ,0]
-#X = [-1.23672422, 0.19736523, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0 ,0 ,0 ,1]
-#X = np.array(X).reshape(1, -1)
-
-z = 0
 
 app = Flask(__name__) 
 
+#Variaveis conexao cosmosdb
 load_dotenv()
 app.secret_key = os.getenv("SECRET_KEY")
 COSMOS_ENDPOINT = "https://accfran.documents.azure.com:443/"
@@ -63,120 +60,48 @@ container = database.create_container_if_not_exists(
     offer_throughput=400
 )'''
 
+
+
+
+
+
+
+
 @app.route("/")
 def home():
     return render_template("index.html")
 
 @app.route("/prever")
 def prever():
-    #res = loaded_model.predict(X)
-    #print("A previsão foi :"+ str(res))
-    
     return render_template("previsao.html")
 
 @app.route("/prever-csv")
 def preverCsv():
     return render_template("previsao_csv.html")
 
-@app.route("/previsao-csv", methods=["POST"])
-def previsaoCsv():
-    ### Captcha (nao necessario em teste) ###
-    '''captcha_response = request.form.get('g-recaptcha-response')
-    load_dotenv()
-    secret = os.environ.get('RECAPTCHA_SECRET')
-    verify_url = 'https://www.google.com/recaptcha/api/siteverify'
-    payload = {'secret': secret, 'response': captcha_response}
-    r = requests.post(verify_url, data=payload)
-    result = r.json()
+@app.route("/contacto")
+def contacto():
+    return render_template("contacto.html")
 
-    if not result.get('success', False):
-        flash("Falha na verificação do CAPTCHA. Tente novamente.")
-        return redirect(url_for('preverCsv'))'''
-    
-    
-    if "csvfile" not in request.files:
-        return "Ficheiro CSV não enviado", 400
+@app.route("/sobre")
+def sobre():
+    return render_template("sobre.html")
 
-    ficheiro = request.files["csvfile"]
-    modelo_escolhido = request.form["modeloEscolhido"].lower()
+@app.route("/contribuir")
+def contribuir():
+    return render_template("contribuir.html")
 
-    # Verifica se o nome do ficheiro está vazio (nenhum ficheiro selecionado)
-    if ficheiro.filename == "":
-        return "Nenhum ficheiro selecionado", 400
+@app.route('/service-worker.js')
+def service_worker():
+    return send_from_directory('.', 'service-worker.js')
 
-
-    # Lê o CSV usando pandas
-    try:
-        df = pd.read_csv(ficheiro)
-        #print("CSV Recebido:")
-        #print(df.head())  # Mostra as primeiras linhas do DataFrame no terminal
-    except Exception as e:
-        flash("Erro ao processar o ficheiro CSV. Consulte o template disponivel nesta página.", "error")
-        return redirect(url_for('preverCsv'))
-    
-    
-
-    #verificar formato do ficheiro
-    
-
-    #fazer previsão
-
-    
-    #Validar se modelo existe
-    if modelo_escolhido not in list(loaded_models.keys()):
-        return f"Modelo desconhecido: {modelo_escolhido}", 400    
-    loaded_model=loaded_models[modelo_escolhido]
+@app.route('/manifest.json')
+def manifest():
+    return send_from_directory('static', 'manifest.json')
 
 
 
-    X = preprocess_data(df)
-
-
-    try:
-        y_pred = loaded_model.predict(X)
-    except Exception as e:
-        flash("Erro ao processar o ficheiro CSV. Consulte o template disponivel nesta página.", "error")
-        return redirect(url_for('preverCsv'))
-    
-    df["churn"] = y_pred
-
-    # Cria buffer para guardar CSV em memória
-    output = io.BytesIO()
-    df.to_csv(output, index=False)
-    output.seek(0)
-
-    download_id = str(uuid4())
-    session[f"csv_{download_id}"] = output.getvalue()
-
-    # Flash e redireciona para página de resultado com o ID
-    flash("Previsão feita, o resultado será descarregado automaticamente.", "success")
-    return redirect(url_for('resultadoCsv', download_id=download_id))
-
-@app.route("/resultado-csv")
-def resultadoCsv():
-    return render_template("previsao_csv.html", download_id=request.args.get("download_id"))
-
-
-@app.route("/download-csv/<download_id>")
-def downloadCsv(download_id):
-    csv_data = session.get(f"csv_{download_id}")
-    if not csv_data:
-        return "Arquivo expirado ou inválido", 404
-
-    output = io.BytesIO(csv_data)
-    return send_file(
-        output,
-        mimetype="text/csv",
-        as_attachment=True,
-        download_name="resultado_previsao.csv"
-    )
-
-
-def preprocess_data(df):
-    return df
-
-
-
+## Previsao Individual ###
 @app.route("/previsao", methods=["POST"])
 def previsao():
     
@@ -227,7 +152,6 @@ def previsao():
 
     #Normalização dos atributos numéricos
     columns_to_normalize = ['tenure', 'MonthlyCharges']
-    #columns_to_normalize = ['MonthlyCharges']
     X[columns_to_normalize] = scaler.transform(X[columns_to_normalize])
 
     modelo_escolhido = request.form["modeloEscolhido"].lower()
@@ -243,11 +167,11 @@ def previsao():
     #print("A previsão foi :"+ str(res)+ " com probabilidade de -> "+str(proba))
 
 
-    #Mandar os resultados da previsao para o frotend
+    # Mandar os resultados da previsao para o frotend
     res_label = "Churn" if res == 1 else "Retenção"
 
 
-    # Generate LIME explanation
+    # LIME explanation
     exp = explainer.explain_instance(
         data_row=X.iloc[0].values,
         predict_fn=lambda x: loaded_model.predict_proba(pd.DataFrame(x, columns=X.columns))
@@ -263,40 +187,97 @@ def previsao():
     img_buffer.seek(0)
 
 
-    # Convert the image buffer to a base64 string to embed in HTML
+    # Conversao da img numa string dentro do HTML
     import base64
     img_str = base64.b64encode(img_buffer.getvalue()).decode('utf-8')
 
-    #global z
-    #z=X
     return render_template("previsao_resultado.html", res=res_label, probabilidade=probabilidade, img_data=img_str)
 
 
-@app.route("/contacto")
-def contacto():
-    return render_template("contacto.html")
+## Previsao em Lote ###
+@app.route("/previsao-csv", methods=["POST"])
+def previsaoCsv():
+    ### Captcha (nao necessario em teste) ###
+    '''captcha_response = request.form.get('g-recaptcha-response')
+    load_dotenv()
+    secret = os.environ.get('RECAPTCHA_SECRET')
+    verify_url = 'https://www.google.com/recaptcha/api/siteverify'
+    payload = {'secret': secret, 'response': captcha_response}
+    r = requests.post(verify_url, data=payload)
+    result = r.json()
 
-@app.route("/sobre")
-def sobre():
-    return render_template("sobre.html")
+    if not result.get('success', False):
+        flash("Falha na verificação do CAPTCHA. Tente novamente.")
+        return redirect(url_for('preverCsv'))'''
+    
+    
+    if "csvfile" not in request.files:
+        return "Ficheiro CSV não enviado", 400
 
-@app.route("/contribuir")
-def contribuir():
-    return render_template("contribuir.html")
+    ficheiro = request.files["csvfile"]
+    modelo_escolhido = request.form["modeloEscolhido"].lower()
 
-from flask import send_from_directory
-@app.route('/service-worker.js')
-def service_worker():
-    return send_from_directory('.', 'service-worker.js')
-
-@app.route('/manifest.json')
-def manifest():
-    return send_from_directory('static', 'manifest.json')
+    # Verificar se o nome do ficheiro está vazio
+    if ficheiro.filename == "":
+        return "Nenhum ficheiro selecionado", 400
 
 
+    # Ler o CSV com o pandas
+    try:
+        df = pd.read_csv(ficheiro)
+    except Exception as e:
+        flash("Erro ao processar o ficheiro CSV. Consulte o template disponivel nesta página.", "error")
+        return redirect(url_for('preverCsv'))
+    
+    
+    #Validar se modelo existe
+    if modelo_escolhido not in list(loaded_models.keys()):
+        return f"Modelo desconhecido: {modelo_escolhido}", 400    
+    loaded_model=loaded_models[modelo_escolhido]
+
+    X = df
+
+    #fazer previsão
+    try:
+        y_pred = loaded_model.predict(X)
+    except Exception as e:
+        flash("Erro ao processar o ficheiro CSV. Consulte o template disponivel nesta página.", "error")
+        return redirect(url_for('preverCsv'))
+    
+    df["churn"] = y_pred
+
+    # Cria buffer para guardar CSV em memória
+    output = io.BytesIO()
+    df.to_csv(output, index=False)
+    output.seek(0)
+
+    download_id = str(uuid4())
+    session[f"csv_{download_id}"] = output.getvalue()
+
+    # Flash e redireciona para página de resultado com o ID
+    flash("Previsão feita, o resultado será descarregado automaticamente.", "success")
+    return redirect(url_for('resultadoCsv', download_id=download_id))
+
+@app.route("/resultado-csv")
+def resultadoCsv():
+    return render_template("previsao_csv.html", download_id=request.args.get("download_id"))
+
+@app.route("/download-csv/<download_id>")
+def downloadCsv(download_id):
+    csv_data = session.get(f"csv_{download_id}")
+    if not csv_data:
+        return "Arquivo expirado ou inválido", 404
+
+    output = io.BytesIO(csv_data)
+    return send_file(
+        output,
+        mimetype="text/csv",
+        as_attachment=True,
+        download_name="resultado_previsao.csv"
+    )
 
 
-
+## Contribuir ###
 @app.route('/submit-data', methods=['POST'])
 def submit_data():
     ### Captcha (nao necessario em teste) ###
@@ -331,13 +312,14 @@ def submit_data():
     }
 
     try:
-        #Nao e necessaria criacao do item no CosmosDB em teste
+        #Nao e necessaria a criacao do item no CosmosDB em teste
         #container.create_item(body=dados)
         flash("Informação Submetida. Obrigado pela sua contribuição!", "success")
         return redirect(url_for('contribuir'))
     except Exception as e:
         print(e)
         return jsonify({"erro": "Falha ao guardar dados."}), 500
+
 
 if __name__ == "__main__":
     #app.run(debug=True)

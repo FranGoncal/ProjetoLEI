@@ -1,7 +1,6 @@
 import unittest
 from app_teste import app  # importa sua app Flask
 from unittest.mock import patch
-import io
 
 
 

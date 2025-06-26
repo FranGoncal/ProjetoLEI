@@ -2,9 +2,7 @@ from flask import Flask, render_template, request, send_file, redirect, url_for,
 import pandas as pd
 from azure.cosmos import CosmosClient, PartitionKey
 import pickle
-import numpy as np
 import joblib
-from io import BytesIO
 import dill
 import io
 import matplotlib.pyplot as plt
@@ -12,9 +10,11 @@ import requests
 import os
 from dotenv import load_dotenv
 from uuid import uuid4
+from flask import send_from_directory
 
 loaded_models = {}
 
+#Carregar modelos
 with open('models/model.pkl', 'rb') as file:
     loaded_models['xgboost'] = pickle.load(file)
 
@@ -33,20 +33,17 @@ with open('models/RF_model.pkl', 'rb') as file:
 with open('models/SVM_model.pkl', 'rb') as file:
     loaded_models['svm'] = pickle.load(file)
 
+#Carregar explainer
 with open('explainers/lime_explainer.pkl', 'rb') as f:
     explainer = dill.load(f)
 
+#Carregar scaler
 scaler = joblib.load('scalers/scaler.pkl')
-#tipo_do_modelo = type(loaded_model).__name__
 
-#X = [1.23672422, -0.28621769, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0 ,1 ,1 ,0]
-#X = [-1.23672422, 0.19736523, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0 ,0 ,0 ,1]
-#X = np.array(X).reshape(1, -1)
-
-z = 0
 
 app = Flask(__name__) 
 
+#Variaveis conexao cosmosdb
 load_dotenv()
 app.secret_key = os.getenv("SECRET_KEY")
 COSMOS_ENDPOINT = "https://accfran.documents.azure.com:443/"
@@ -54,7 +51,7 @@ COSMOS_KEY = os.getenv("COSMOS_KEY")
 DATABASE_NAME = "databaseFran"
 CONTAINER_NAME = "dados"
 
-
+#Conexao cosmosdb
 client = CosmosClient(COSMOS_ENDPOINT, COSMOS_KEY)
 database = client.create_database_if_not_exists(id=DATABASE_NAME)
 container = database.create_container_if_not_exists(
@@ -62,6 +59,13 @@ container = database.create_container_if_not_exists(
     partition_key=PartitionKey(path="/nome"),
     offer_throughput=400
 )
+
+
+
+
+
+
+
 
 @app.route("/")
 def home():
@@ -75,6 +79,29 @@ def prever():
 def preverCsv():
     return render_template("previsao_csv.html")
 
+@app.route("/contacto")
+def contacto():
+    return render_template("contacto.html")
+
+@app.route("/sobre")
+def sobre():
+    return render_template("sobre.html")
+
+@app.route("/contribuir")
+def contribuir():
+    return render_template("contribuir.html")
+
+@app.route('/service-worker.js')
+def service_worker():
+    return send_from_directory('.', 'service-worker.js')
+
+@app.route('/manifest.json')
+def manifest():
+    return send_from_directory('static', 'manifest.json')
+
+
+
+## Previsao em Lote ###
 @app.route("/previsao-csv", methods=["POST"])
 def previsaoCsv():
     ### Captcha ###
@@ -97,32 +124,27 @@ def previsaoCsv():
     ficheiro = request.files["csvfile"]
     modelo_escolhido = request.form["modeloEscolhido"].lower()
 
-    # Verifica se o nome do ficheiro está vazio (nenhum ficheiro selecionado)
+    # Verificar se o nome do ficheiro está vazio
     if ficheiro.filename == "":
         return "Nenhum ficheiro selecionado", 400
 
 
-    # Lê o CSV usando pandas
+    # Ler o CSV com o pandas
     try:
         df = pd.read_csv(ficheiro)
-        print("CSV Recebido:")
-        print(df.head())  # Mostra as primeiras linhas do DataFrame no terminal
     except Exception as e:
         flash("Erro ao processar o ficheiro CSV. Consulte o template disponivel nesta página.", "error")
         return redirect(url_for('preverCsv'))
     
-    
 
-    #verificar formato do ficheiro
-    
-
-    #fazer previsão
+    #Validar se modelo existe
     if modelo_escolhido not in list(loaded_models.keys()):
         return f"Modelo desconhecido: {modelo_escolhido}", 400    
     loaded_model=loaded_models[modelo_escolhido]
     
-    X = preprocess_data(df)
+    X = df
 
+    #fazer previsão
     try:
         y_pred = loaded_model.predict(X)
     except Exception as e:
@@ -147,7 +169,6 @@ def previsaoCsv():
 def resultadoCsv():
     return render_template("previsao_csv.html", download_id=request.args.get("download_id"))
 
-
 @app.route("/download-csv/<download_id>")
 def downloadCsv(download_id):
     csv_data = session.get(f"csv_{download_id}")
@@ -163,11 +184,7 @@ def downloadCsv(download_id):
     )
 
 
-def preprocess_data(df):
-    return df
-
-
-
+## Previsao Individual ###
 @app.route("/previsao", methods=["POST"])
 def previsao():
     
@@ -218,7 +235,6 @@ def previsao():
 
     #Normalização dos atributos numéricos
     columns_to_normalize = ['tenure', 'MonthlyCharges']
-    #columns_to_normalize = ['MonthlyCharges']
     X[columns_to_normalize] = scaler.transform(X[columns_to_normalize])
 
     modelo_escolhido = request.form["modeloEscolhido"].lower()
@@ -231,14 +247,14 @@ def previsao():
     res = loaded_model.predict(X)
     proba = loaded_model.predict_proba(X)
     probabilidade = round(proba[0][res[0]] * 100, 2)  
-    print("A previsão foi :"+ str(res)+ " com probabilidade de -> "+str(proba))
+    #print("A previsão foi :"+ str(res)+ " com probabilidade de -> "+str(proba))
 
 
-    #Mandar os resultados da previsao para o frotend
+    # Mandar os resultados da previsao para o frotend
     res_label = "Churn" if res == 1 else "Retenção"
 
 
-    # Generate LIME explanation
+    # LIME explanation
     exp = explainer.explain_instance(
         data_row=X.iloc[0].values,
         predict_fn=lambda x: loaded_model.predict_proba(pd.DataFrame(x, columns=X.columns))
@@ -254,40 +270,14 @@ def previsao():
     img_buffer.seek(0)
 
 
-    # Convert the image buffer to a base64 string to embed in HTML
+    # Conversao da img numa string dentro do HTML
     import base64
     img_str = base64.b64encode(img_buffer.getvalue()).decode('utf-8')
 
-    #global z
-    #z=X
     return render_template("previsao_resultado.html", res=res_label, probabilidade=probabilidade, img_data=img_str)
 
 
-@app.route("/contacto")
-def contacto():
-    return render_template("contacto.html")
-
-@app.route("/sobre")
-def sobre():
-    return render_template("sobre.html")
-
-@app.route("/contribuir")
-def contribuir():
-    return render_template("contribuir.html")
-
-from flask import send_from_directory
-@app.route('/service-worker.js')
-def service_worker():
-    return send_from_directory('.', 'service-worker.js')
-
-@app.route('/manifest.json')
-def manifest():
-    return send_from_directory('static', 'manifest.json')
-
-
-
-
-
+## Contribuir ###
 @app.route('/submit-data', methods=['POST'])
 def submit_data():
     ### Captcha ###
@@ -335,6 +325,7 @@ def submit_data():
     except Exception as e:
         print(e)
         return jsonify({"erro": "Falha ao guardar dados."}), 500
+
 
 if __name__ == "__main__":
     #app.run(debug=True)

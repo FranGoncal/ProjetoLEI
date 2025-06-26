@@ -3,11 +3,10 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 import time
 
-# Configurar opções para suprimir logs do Chrome
+
 chrome_options = Options()
 chrome_options.add_argument("--log-level=3")
 chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
-
 driver = webdriver.Chrome(options=chrome_options)
 
 driver.get("http://localhost:5000/contribuir")
@@ -23,7 +22,7 @@ if not dependents_checkbox.is_selected():
 
 driver.find_element(By.ID, "tenure").send_keys("24")
 
-# Seleção serviço internet
+# Selecionar servico de internet
 internet_service = driver.find_element(By.ID, "internetService")
 for option in internet_service.find_elements(By.TAG_NAME, 'option'):
     if option.get_attribute("value") == "fiber_optic":
@@ -43,7 +42,7 @@ for option in contract_select.find_elements(By.TAG_NAME, 'option'):
         option.click()
         break
 
-# Método pagamento
+# Metodo pagamento
 payment_select = driver.find_element(By.ID, "paymentMethod")
 for option in payment_select.find_elements(By.TAG_NAME, 'option'):
     if option.get_attribute("value") == "credit_card":
@@ -52,7 +51,7 @@ for option in payment_select.find_elements(By.TAG_NAME, 'option'):
 
 driver.find_element(By.ID, "monthlyCharges").send_keys("89.99")
 
-# Checkbox churn (abandono serviço)
+# Checkbox churn
 churn_checkbox = driver.find_element(By.ID, "idChurngSwitch")
 if not churn_checkbox.is_selected():
     churn_checkbox.click()
@@ -60,7 +59,7 @@ if not churn_checkbox.is_selected():
 # Espera para o JS mostrar os campos opcionais
 time.sleep(1)
 
-# Preencher campos opcionais visíveis após ativar churn
+# Preencher campos opcionais visiveis apos ativar churn
 motivo = driver.find_element(By.ID, "motivo")
 motivo.send_keys("Mudança de operadora pela melhor oferta.")
 
@@ -70,13 +69,12 @@ contramedida.send_keys("Ofertas mais competitivas poderiam ter evitado a saída.
 pais = driver.find_element(By.ID, "pais")
 pais.send_keys("Portugal")
 
-print("[INFO] A submeter o formulário...")
 driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
 
 # Espera resposta depois de submeter
 time.sleep(3)
 
-# Verificação de confirmação na página
+# Verificacao de confirmacao na pagina
 page_source = driver.page_source.lower()
 if "obrigado" in page_source or "sucesso" in page_source or "recebido" in page_source:
     print("[SUCESSO] Formulário submetido com sucesso!")

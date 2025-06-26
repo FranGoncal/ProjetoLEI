@@ -3,7 +3,6 @@
 import unittest
 from app_teste import app
 import io
-import pandas as pd
 
 class PrevisaoCsvTestCase(unittest.TestCase):
     def setUp(self):
@@ -11,14 +10,14 @@ class PrevisaoCsvTestCase(unittest.TestCase):
         self.app.testing = True
 
     def test_previsao_csv_success(self):
-        # Criar um CSV em memória com colunas compatíveis com o preprocess_data()
+        # Criar um CSV em memória
         csv_data = (
             "tenure,MonthlyCharges,InternetService_DSL,InternetService_Fiber optic,InternetService_No,Contract_Month-to-month,Contract_One year,Contract_Two year,PaymentMethod_Bank transfer (automatic),PaymentMethod_Credit card (automatic),PaymentMethod_Electronic check,PaymentMethod_Mailed check,Dependents_Yes,OnlineSecurity_Yes,TechSupport_Yes,PaperlessBilling_Yes\n"
             "1,170.35,0,1,0,1,0,0,0,0,1,0,0,0,0,1\n"
         )
 
         data = {
-            'modeloEscolhido': 'rf',  # modelo existente no teu loaded_models
+            'modeloEscolhido': 'rf',  # modelo existente
             'csvfile': (io.BytesIO(csv_data.encode('utf-8')), 'test.csv')
         }
 

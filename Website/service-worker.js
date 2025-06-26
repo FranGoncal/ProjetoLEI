@@ -1,6 +1,6 @@
 const CACHE_NAME = 'churn-predictor-cache-v2';
 const urlsToCache = [
-  '/',                                // a página inicial (index.html via Flask)
+  '/',
   '/static/app.js',
   '/static/styles.css',
   '/static/icon_web_white.png',
@@ -41,7 +41,7 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Evento de fetch — tenta ir ao cache primeiro, depois à rede, senão mostra offline.html
+// Evento de fetch — tenta ir ao cache primeiro, depois à rede, se nao funcionar mostra a pag offline.html
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)

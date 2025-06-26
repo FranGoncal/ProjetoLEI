@@ -14,7 +14,6 @@ def testar_csv(csv_filename, mensagem_esperada):
     chrome_options = Options()
     chrome_options.add_argument("--log-level=3")
     chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
-
     csv_path = os.path.abspath(csv_filename)
     driver = webdriver.Chrome(options=chrome_options)
 
